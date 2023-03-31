@@ -1,18 +1,25 @@
-import os
-
-from logging.config import fileConfig
 from flask import Flask
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-phase = ''
+from config.dev.lsi import config
+
+db = SQLAlchemy()
+migrate = Migrate()
 
 
-def init_app(app):
-    global phase
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(config)
 
-    phase = os.getenv('SCHOOLOUD_ENV', 'DEV').lower()
-    # export SCHOOLOUD_ENV=suin
-    app.config.from_pyfile(f'../config/{phase}/config.cfg')
-    logfile = app.config['LOG_CONFIG_PATH']
-    with open(logfile % phase) as f:
-        fileConfig(f)
+    # ORM
+    db.init_app(app)
+    migrate.init_app(app, db)
+    from .model import proposal, student
+
+    # blueprint
+    from schooloud.api import hello, student
+    app.register_blueprint(hello.bp)
+    app.register_blueprint(student.bp)
+
+    return app
