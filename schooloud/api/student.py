@@ -1,19 +1,12 @@
-from flask import Blueprint
+from schooloud.blueprints import student
+from schooloud.controller.TestController import TestController
 from flask import jsonify
 
-from schooloud.model.student import Student
 
-bp = Blueprint('student', __name__, url_prefix='/student')
+testcontroller = TestController()
 
 
-@bp.route('/<sid>')
+@student.route('/<sid>')
 def say_hello_world(sid):
-    student = Student.query.filter(Student.sid == sid).one()
-    student_dict = {
-        'sid': student.sid,
-        'email': student.email,
-        'name': student.name,
-        'password': student.password,
-        'major': student.major
-    }
-    return jsonify(student_dict)
+    student = testcontroller.get_test_user(sid)
+    return jsonify(student)

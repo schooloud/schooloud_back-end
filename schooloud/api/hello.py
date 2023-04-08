@@ -1,9 +1,7 @@
-from flask import Blueprint
-
-bp = Blueprint('hello_world', __name__, url_prefix='/hello_world')
+from schooloud.blueprints import hello
 
 
-@bp.route('/say')
+@hello.route('/say')
 def say_hello_world():
     return 'Hello World!'
 
