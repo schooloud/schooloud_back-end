@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
 
+from schooloud.libs.database import db
 from config.dev.lsi import config
 
-db = SQLAlchemy()
+
 migrate = Migrate()
 
 
