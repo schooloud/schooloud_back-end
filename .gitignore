@@ -208,7 +208,7 @@ log/
 .idea
 
 #database
-.db
+*.db
 
 #flask-migrations
 migrations/
