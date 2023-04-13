@@ -56,5 +56,6 @@ flask --app manage db init
 flask --app manage db migrate
 flask --app manage db upgrade
 
-#12. go to home dir(~)
+#12. go to home dir and restart uwsgi(~)
 cd /home/ubuntu
+sudo systemctl restart uwsgi
