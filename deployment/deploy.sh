@@ -5,11 +5,11 @@ sudo apt-get update
 git clone https://github.com/schooloud/schooloud_back-end.git /home/ubuntu/schooloud_back
 
 #3. install virtual environment (~)
-sudo apt install python3.8-venv
-python -m venv /home/ubuntu/myvenv
+#sudo apt install python3.8-venv
+#python -m venv /home/ubuntu/myvenv
 
 #4. activate virtual environment (~)
-source /home/ubuntu/myvenv/bin/activate
+#source /home/ubuntu/myvenv/bin/activate
 
 #5. set environment variables (~/schooloud_back)
 cd /home/ubuntu/schooloud_back
@@ -18,11 +18,12 @@ export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
 
 #6. install from requirements.txt (~/schooloud_back)
  # install pip and zipp
+sudo apt install python3-flask
 sudo apt install python3-pip
 sudo apt-get install python3-zipp
  # pip install
 pip install wheel
-pip install -r ./requirements/txt
+pip install -r ./requirements.txt # flask script 설치 에러 뜸
 
 #7. install uwsgi and nginx (~/schooloud_back)
 sudo apt-get install python3.8-dev
@@ -37,7 +38,8 @@ mkdir socket
 mkdir logs
 
 #9. set uwsgi service (~)
-sudo vi /etc/systemd/system/schooloud.service
+#sudo vi /etc/systemd/system/schooloud.service
+cp /home/ubuntu/schooloud_back/deployment/schooloud.service /etc/systemd/system/schooloud.service
 sudo systemctl enable uwsgi
 #if wanna see status of uwsgi service => sudo service uwsgi status
 
