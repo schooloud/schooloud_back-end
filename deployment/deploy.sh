@@ -22,8 +22,11 @@ sudo apt install python3-flask
 sudo apt install python3-pip
 sudo apt-get install python3-zipp
  # pip install
-pip install wheel
-pip install -r ./requirements.txt # flask script 설치 에러 뜸
+sudo pip install wheel
+sudo pip install -r ./requirements.txt # flask script 설치 에러 뜸
+ # if flask version error
+sudo pip install -U flask
+sudo pip install -r ./requirements.txt
 
 #7. install uwsgi and nginx (~/schooloud_back)
 sudo apt-get install python3.8-dev
@@ -38,9 +41,9 @@ mkdir socket
 mkdir logs
 
 #9. set uwsgi service (~)
-#sudo vi /etc/systemd/system/schooloud.service
-sudo cp /home/ubuntu/schooloud_back/deployment/schooloud.service /etc/systemd/system/schooloud.service
+sudo cp /home/ubuntu/schooloud_back/deployment/schooloud.service /etc/uwsgi/apps-enabled/schooloud.ini
 sudo systemctl enable uwsgi
+sudo systemctl restart uwsgi
 #if wanna see status of uwsgi service => sudo service uwsgi status
 
 #10. set nginx (~)
