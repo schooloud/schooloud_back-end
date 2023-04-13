@@ -39,18 +39,18 @@ mkdir logs
 
 #9. set uwsgi service (~)
 #sudo vi /etc/systemd/system/schooloud.service
-cp /home/ubuntu/schooloud_back/deployment/schooloud.service /etc/systemd/system/schooloud.service
+sudo cp /home/ubuntu/schooloud_back/deployment/schooloud.service /etc/systemd/system/schooloud.service
 sudo systemctl enable uwsgi
 #if wanna see status of uwsgi service => sudo service uwsgi status
 
 #10. set nginx (~)
-cp /home/ubuntu/schooloud_back/deployment/schoolud_app_nginx /etc/nginx/sites-enabled/schooloud
+sudo cp /home/ubuntu/schooloud_back/deployment/schooloud_app_nginx /etc/nginx/sites-enabled/schooloud
 
 #11. flask setting (~/schooloud_back/schooloud)
 cd /home/ubuntu/schooloud_back/schooloud
 flask --app manage db init
 flask --app manage db migrate
-flask --app manage db update
+flask --app manage db upgrade
 
 #12. go to home dir(~)
 cd /home/ubuntu
