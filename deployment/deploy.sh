@@ -41,7 +41,7 @@ mkdir socket
 mkdir logs
 
 #9. set uwsgi service (~)
-sudo cp /home/ubuntu/schooloud_back/deployment/schooloud.service /etc/uwsgi/apps-enabled/schooloud.ini
+sudo cp /home/ubuntu/schooloud_back/deployment/uwsgi.ini /etc/uwsgi/apps-enabled/schooloud.ini
 sudo systemctl enable uwsgi
 sudo systemctl restart uwsgi
 #if wanna see status of uwsgi service => sudo service uwsgi status
