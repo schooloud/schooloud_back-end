@@ -48,6 +48,7 @@ sudo systemctl restart uwsgi
 
 #10. set nginx (~)
 sudo cp /home/ubuntu/schooloud_back/deployment/schooloud_app_nginx /etc/nginx/sites-enabled/schooloud
+sudo systemctl restart nginx
 
 #11. flask setting (~/schooloud_back/schooloud)
 cd /home/ubuntu/schooloud_back/schooloud
