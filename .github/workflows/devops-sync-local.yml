@@ -3,6 +3,7 @@ on:
     types: [ merged ]
     branches: [ develop ]
 
+
 jobs:
   build:
     name: synchronization between local and remote repository
