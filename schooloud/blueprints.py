@@ -13,4 +13,4 @@ student = _factory('student', '/student')
 hello_github = _factory('github', '/hello_github')
 
 
-all_blueprints = (hello, student)
+all_blueprints = (hello, student, hello_github)
