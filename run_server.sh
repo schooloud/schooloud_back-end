@@ -4,4 +4,6 @@ DIR_HOME=$(pwd)
 
 export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
 
-python3 schooloud/hello.py
+cd schooloud
+flask --app manage db migrate
+flask --app manage db upgrade

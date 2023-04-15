@@ -17,3 +17,4 @@ class Proposal(db.Model):
     author = db.relationship('User', backref=db.backref('proposals'))
     author_email = db.Column(db.String(50), db.ForeignKey('user.email', ondelete='CASCADE'))
 
+
