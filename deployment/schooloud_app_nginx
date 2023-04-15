@@ -1,7 +1,7 @@
 server {
 	listen 80;
 
-	server_name api.schooloud.cloud;
+	server_name test-api.schooloud.cloud;
 
 	location / {
 		try_files $uri @app;
