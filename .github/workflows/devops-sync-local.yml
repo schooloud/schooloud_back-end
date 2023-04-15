@@ -1,6 +1,8 @@
 on:
-  push:
+  pull_request:
+    types: [ merged ]
     branches: [ develop ]
+
 
 jobs:
   build:
