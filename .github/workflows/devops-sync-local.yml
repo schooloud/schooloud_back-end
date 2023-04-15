@@ -4,7 +4,7 @@ on:
 
 jobs:
   build:
-    name: remote ssh test
+    name: synchronization between local and remote repository
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -19,6 +19,7 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd /home/ubuntu/schooloud_back
+          git checkout develop
           git pull origin develop
           cd /home/ubuntu/schooloud_back/schooloud
           flask --app manage db migrate
