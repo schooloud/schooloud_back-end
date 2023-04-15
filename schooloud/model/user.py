@@ -1,4 +1,6 @@
 from schooloud import db
+
+
 class User(db.Model):
     __tablename__ = 'user'
     email = db.Column(db.String(50), primary_key=True)

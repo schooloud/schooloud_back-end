@@ -1,5 +1,6 @@
 from schooloud import db
 
+
 class Session(db.Model):
     __tablename__ = 'session'
     sessionKey = db.Column(db.String(32), primary_key=True)
