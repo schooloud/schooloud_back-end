@@ -1,4 +1,4 @@
-from schooloud import db
+from schooloud.libs.database import db
 
 
 class QuataRequest(db.Model):

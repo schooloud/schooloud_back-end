@@ -20,3 +20,4 @@ class ProposalController:
             'author': proposal.author
         }
         return proposal_dict
+

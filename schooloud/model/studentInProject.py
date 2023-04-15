@@ -1,9 +1,9 @@
-from schooloud import db
+from schooloud.libs.database import db
 
 
 class StudentInProject(db.Model):
     __tablename__ = 'studentInProject'
-
+    id = db.Column(db.Integer, primary_key=True)
     studentEmail = db.Column(db.String(50), db.ForeignKey("user.email"))
     student = db.relationship("User", back_populates="projects")
 

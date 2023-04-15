@@ -1,4 +1,4 @@
-from schooloud import db
+from schooloud.libs.database import db
 
 
 class User(db.Model):
@@ -14,3 +14,5 @@ class User(db.Model):
     session = db.relationship("Session", back_populates="user", uselist=False)
     quataRequests = db.relationship("QuataRequest", back_populates="author")
     projects = db.relationship("StudentInProject", back_populates="students")
+
+    __table_args__ = {'extend_existing': True}
