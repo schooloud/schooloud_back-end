@@ -1,11 +1,10 @@
 on:
-  pull_request:
+  push:
     branches: [ develop ]
-
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
+    if: ${{ github.event.pull_request.merged }}
     name: synchronization between local and remote repository
     runs-on: ubuntu-latest
     steps:
