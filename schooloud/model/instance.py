@@ -7,6 +7,7 @@ class Instance(db.Model):
     domain = db.Column(db.Text(100))
     port = db.Column(db.Integer)
 
-    projectId = db.Column(db.String(32), db.ForeignKey("project.projectId"))
-    project = db.relationship("Project", back_populates="instances")  # many-to-one 관계의 참조 변수
+    # projectId = db.Column(db.String(32), db.ForeignKey("project.projectId"))
+    # project = db.relationship("Project", back_populates="instances")  # many-to-one 관계의 참조 변수
 
+    __table_args__ = {'extend_existing': True}

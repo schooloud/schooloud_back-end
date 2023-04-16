@@ -12,7 +12,8 @@ class Project(db.Model):
     createAt = db.Column(db.DateTime(), nullable=False)
     endAt = db.Column(db.DateTime(), nullable=False)
 
-    instances = db.relationship("Instance", back_populates="project")
-    quataRequests = db.relationship("QuataRequest", back_populates="project")
-    students = db.relationship("Student", back_populates="projects")
+    # instances = db.relationship("Instance", back_populates="project")
+    # quataRequests = db.relationship("QuataRequest", back_populates="project")
+    # students = db.relationship("StudentInProject", back_populates="projects")
 
+    __table_args__ = {'extend_existing': True}

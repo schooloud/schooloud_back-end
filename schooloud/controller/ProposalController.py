@@ -1,5 +1,6 @@
 from schooloud.model.proposal import Proposal
-
+from datetime import datetime
+from schooloud.libs.database import db
 
 class ProposalController:
     def __init__(self):
@@ -15,9 +16,14 @@ class ProposalController:
             'memory': proposal.memory,
             'storage': proposal.storage,
             'status': proposal.status,
-            'createdAt': proposal.createdAt,
-            'endAt': proposal.endAt,
+            'createdAt': proposal.createAt.strftime('%Y-%m-%d %H:%M:%S'),
+            'endAt': proposal.endAt.strftime('%Y-%m-%d %H:%M:%S'),
             'author': proposal.author
         }
         return proposal_dict
 
+    def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, status, author):
+        proposal = Proposal(purpose=purpose, projectName=projectName, instanceNum=instanceNum, cpu=cpu, memory=memory, storage=storage, status=status, author=author)
+        db.session.add(proposal)
+        db.session.commit()
+        return proposal.proposalId
