@@ -1,15 +1,18 @@
 from schooloud.blueprints import proposal
 from schooloud.controller.ProposalController import ProposalController
-
+from flask import request
 
 proposalController = ProposalController()
+
 
 @proposal.route('/detail/<proposalId>')
 ### 없는 proposalId를 요청한 경우 에러 처리 필요
 def get_proposal_detail(proposalId):
     return proposalController.get_proposal(proposalId)
 
-@proposal.route('/create')
-### 데이터베이스에 값 추가될때마다 자동으로 id값 업데이트 필요
+
+@proposal.route('/create', methods=['POST'])
 def create_proposal():
-    return proposalController.set_proposal("test", "projecttt", 2, 3, 4, 4, "WAIT", "asdf")
+    params = request.get_json()
+    return proposalController.set_proposal(params['purpose'], params['name'], params['instanceNum'], params['cpu'],
+                                           params['memory'], params['storage'], params['author_email'])

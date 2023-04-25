@@ -22,9 +22,9 @@ class ProposalController:
         }
         return proposal_dict
 
-    def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, status, author_email):
+    def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, author_email):
         proposal = Proposal(purpose=purpose, projectName=projectName, instanceNum=instanceNum, cpu=cpu, memory=memory,
-                            storage=storage, status=status, author_email=author_email)
+                            storage=storage, status="WAIT", author_email=author_email)
         db.session.add(proposal)
         db.session.commit()
         return str(proposal.proposalId)
