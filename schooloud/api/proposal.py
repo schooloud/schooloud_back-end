@@ -12,4 +12,4 @@ def get_proposal_detail(proposalId):
 @proposal.route('/create')
 ### 데이터베이스에 값 추가될때마다 자동으로 id값 업데이트 필요
 def create_proposal():
-    proposalController.set_proposal("test", "projecttt", 2, 3, 4, 4, "WAIT", "asdf")
+    return proposalController.set_proposal("test", "projecttt", 2, 3, 4, 4, "WAIT", "asdf")
