@@ -15,4 +15,4 @@ def get_proposal_detail(proposalId):
 def create_proposal():
     params = request.get_json()
     return proposalController.set_proposal(params['purpose'], params['name'], params['instanceNum'], params['cpu'],
-                                           params['memory'], params['storage'], params['author_email'])
+                                           params['memory'], params['storage'], params['author_email'], params['endAt'])

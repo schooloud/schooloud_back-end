@@ -18,13 +18,13 @@ class ProposalController:
             'status': proposal.status,
             'createdAt': proposal.createAt.strftime('%Y-%m-%d %H:%M:%S'),
             'endAt': proposal.endAt.strftime('%Y-%m-%d %H:%M:%S'),
-            'author': proposal.author
+            'author_email': proposal.author_email
         }
         return proposal_dict
 
-    def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, author_email):
+    def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, author_email, endAt):
         proposal = Proposal(purpose=purpose, projectName=projectName, instanceNum=instanceNum, cpu=cpu, memory=memory,
-                            storage=storage, status="WAIT", author_email=author_email)
+                            storage=storage, status="WAIT", author_email=author_email, endAt=endAt)
         db.session.add(proposal)
         db.session.commit()
         return str(proposal.proposalId)

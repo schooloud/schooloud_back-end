@@ -20,7 +20,7 @@ class Proposal(db.Model):
 
     __table_args__ = {'extend_existing': True}
 
-    def __init__(self, purpose, projectName, instanceNum, cpu, memory, storage, status, author_email):
+    def __init__(self, purpose, projectName, instanceNum, cpu, memory, storage, status, author_email, endAt):
         self.purpose = purpose
         self.projectName = projectName
         self.instanceNum = instanceNum
@@ -30,4 +30,5 @@ class Proposal(db.Model):
         self.status = status
         self.author = author_email
         self.createAt = datetime.now()
-        self.endAt = datetime.now()
+        self.endAt = datetime.strptime(endAt, "%Y-%m-%d")
+
