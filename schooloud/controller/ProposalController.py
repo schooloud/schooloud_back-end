@@ -8,19 +8,8 @@ class ProposalController:
 
     def get_proposal(self, proposalId):
         proposal = Proposal.query.filter(Proposal.proposalId == proposalId).one()
-        proposal_dict = {
-            'purpose': proposal.purpose,
-            'projectName': proposal.projectName,
-            'instanceNum': proposal.instanceNum,
-            'cpu': proposal.cpu,
-            'memory': proposal.memory,
-            'storage': proposal.storage,
-            'status': proposal.status,
-            'createdAt': proposal.createAt.strftime('%Y-%m-%d %H:%M:%S'),
-            'endAt': proposal.endAt.strftime('%Y-%m-%d %H:%M:%S'),
-            'author_email': proposal.author_email
-        }
-        return proposal_dict
+        return proposal.as_dict()
+
 
     def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, author_email, endAt):
         proposal = Proposal(purpose=purpose, projectName=projectName, instanceNum=instanceNum, cpu=cpu, memory=memory,
@@ -28,3 +17,14 @@ class ProposalController:
         db.session.add(proposal)
         db.session.commit()
         return str(proposal.proposalId)
+
+
+    def get_proposal_list(self):
+        proposal_list = []
+        proposals = Proposal.query.all()
+        for proposal in proposals:
+            proposal_list.append(proposal.as_dict())
+        return proposal_list
+
+    def update_proposal_state(self, proposalId, isApproved):
+        return

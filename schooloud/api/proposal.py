@@ -16,3 +16,13 @@ def create_proposal():
     params = request.get_json()
     return proposalController.set_proposal(params['purpose'], params['name'], params['instanceNum'], params['cpu'],
                                            params['memory'], params['storage'], params['author_email'], params['endAt'])
+
+
+@proposal.route('/approve')
+def approve_proposal():
+    params = request.get_json()
+
+
+@proposal.route('/list')
+def get_proposal_list():
+    return proposalController.get_proposal_list()
