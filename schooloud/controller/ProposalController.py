@@ -1,5 +1,6 @@
+from sqlalchemy.exc import NoResultFound
+
 from schooloud.model.proposal import Proposal
-from datetime import datetime
 from schooloud.libs.database import db
 from schooloud.model.user import User
 
@@ -9,8 +10,11 @@ class ProposalController:
         pass
 
     def get_proposal(self, proposalId):
-        proposal = Proposal.query.filter(Proposal.proposalId == proposalId).one()
-        return proposal.as_dict()
+        try:
+            proposal = Proposal.query.filter(Proposal.proposalId == proposalId).one()
+            return proposal.as_dict()
+        except NoResultFound:
+            return "there is no proposal matches"
 
 
     def set_proposal(self, purpose, projectName, instanceNum, cpu, memory, storage, author_email, endAt):

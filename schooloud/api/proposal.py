@@ -6,7 +6,6 @@ proposalController = ProposalController()
 
 
 @proposal.route('/detail/<proposalId>')
-### 없는 proposalId를 요청한 경우 에러 처리 필요
 def get_proposal_detail(proposalId):
     return proposalController.get_proposal(proposalId)
 
