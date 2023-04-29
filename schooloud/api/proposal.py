@@ -25,4 +25,11 @@ def approve_proposal():
 
 @proposal.route('/list')
 def get_proposal_list():
-    return proposalController.get_proposal_list()
+    params = request.get_json()
+    return proposalController.get_proposal_list(params['user_email'])
+
+
+@proposal.route('/approve')
+def approve_proposal():
+    params = request.get_json()
+    return proposalController.get_proposal_list(params['user_email'])

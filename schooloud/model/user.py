@@ -10,7 +10,7 @@ class User(db.Model):
     major = db.Column(db.String(30))
     role = db.Column(db.String(20), nullable=False)
 
-    proposals = db.relationship('schooloud.model.proposal.Proposal', backref="author")
+    # proposals = db.relationship('schooloud.model.proposal.Proposal', backref="author")
 
     # session = db.relationship("Session", back_populates="user", uselist=False)
     # quataRequests = db.relationship("QuataRequest", back_populates="author")
