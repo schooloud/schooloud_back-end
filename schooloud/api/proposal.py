@@ -18,18 +18,13 @@ def create_proposal():
                                            params['memory'], params['storage'], params['author_email'], params['endAt'])
 
 
-@proposal.route('/approve')
-def approve_proposal():
-    params = request.get_json()
-
-
 @proposal.route('/list')
 def get_proposal_list():
     params = request.get_json()
     return proposalController.get_proposal_list(params['user_email'])
 
 
-@proposal.route('/approve')
+@proposal.route('/approve', methods=['POST'])
 def approve_proposal():
     params = request.get_json()
-    return proposalController.get_proposal_list(params['user_email'])
+    return proposalController.update_proposal_state(params['proposalId'], params['isApproved'])

@@ -35,4 +35,14 @@ class ProposalController:
         return proposal_list
 
     def update_proposal_state(self, proposalId, isApproved):
-        return
+        if isApproved:
+            proposal = Proposal.query.filter(Proposal.proposalId == proposalId)
+            proposal.update({"status": "APPROVED"})
+            # 프로젝트 생성 함수 호출
+
+
+        else:
+            proposal = Proposal.query.filter(Proposal.proposalId == proposalId)
+            proposal.update({"status": "REJECTED"})
+        db.session.commit()
+        return str(proposalId)
