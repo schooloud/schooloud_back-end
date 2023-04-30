@@ -9,8 +9,7 @@ def _factory(partial_module_string, url_prefix):
 
 
 hello = _factory('hello', '/hello_world')
-student = _factory('student', '/student')
 hello_github = _factory('hello_github', '/hello_github')
+proposal = _factory('proposal', '/proposal')
 
-
-all_blueprints = (hello, student, hello_github)
+all_blueprints = (hello, hello_github, proposal)

@@ -1,4 +1,4 @@
-from schooloud import db
+from schooloud.libs.database import db
 
 
 class User(db.Model):
@@ -10,7 +10,10 @@ class User(db.Model):
     major = db.Column(db.String(30))
     role = db.Column(db.String(20), nullable=False)
 
-    proposals = db.relationship("Proposal", back_populates="author")
-    session = db.relationship("Session", back_populates="user", uselist=False)
-    quataRequests = db.relationship("QuataRequest", back_populates="author")
-    projects = db.relationship("StudentInProject", back_populates="students")
+    # proposals = db.relationship('schooloud.model.proposal.Proposal', backref="author")
+
+    # session = db.relationship("Session", back_populates="user", uselist=False)
+    # quataRequests = db.relationship("QuataRequest", back_populates="author")
+    # projects = db.relationship("StudentInProject", back_populates="students")
+
+    __table_args__ = {'extend_existing': True}
