@@ -10,11 +10,9 @@ class ProposalController:
         pass
 
     def get_proposal(self, proposal_id):
-        try:
-            proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id).one()
-            return proposal.as_dict()
-        except NoResultFound:
-            return "there is no proposal matches"
+        proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id).one()
+        return proposal.as_dict()
+
 
     def set_proposal(self, request_data):
         purpose = request_data['purpose']
@@ -32,8 +30,10 @@ class ProposalController:
         db.session.commit()
         return proposal.proposal_id
 
-    def get_proposal_list(self, user_email):
+    def get_proposal_list(self, request_data):
+        user_email = request_data['user_email']
         proposal_list = []
+
         user = User.query.filter(User.email == user_email).one()
         if user.role == 'ADMIN':
             proposals = Proposal.query.all()
@@ -45,7 +45,10 @@ class ProposalController:
             proposal_list.append(proposal.as_dict())
         return proposal_list
 
-    def update_proposal_state(self, proposal_id, is_approved):
+    def update_proposal_state(self, request_data):
+        proposal_id = request_data['proposal_id']
+        is_approved = request_data['is_approved']
+
         if is_approved:
             proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id)
             proposal.update({"status": "APPROVED"})
@@ -56,4 +59,4 @@ class ProposalController:
             proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id)
             proposal.update({"status": "REJECTED"})
         db.session.commit()
-        return str(proposal_id)
+        return proposal_id
