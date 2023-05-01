@@ -16,13 +16,21 @@ class ProposalController:
         except NoResultFound:
             return "there is no proposal matches"
 
-    def set_proposal(self, purpose, project_name, instance_num, cpu, memory, storage, author_email, end_at):
+    def set_proposal(self, request_data):
+        purpose = request_data['purpose']
+        project_name = request_data['name']
+        instance_num = request_data['instance_num']
+        cpu = request_data['cpu']
+        memory = request_data['memory']
+        storage = request_data['storage']
+        author_email = request_data['author_email']
+        end_at = request_data['end_at']
 
-        proposal = Proposal(purpose=purpose, project_name=project_name, instance_num=instance_num, cpu=cpu, memory=memory,
-                            storage=storage, status="WAIT", author_email=author_email, end_at=end_at)
+        proposal = Proposal(purpose=purpose, project_name=project_name, instance_num=instance_num, cpu=cpu,
+                            memory=memory, storage=storage, status="WAIT", author_email=author_email, end_at=end_at)
         db.session.add(proposal)
         db.session.commit()
-        return str(proposal.proposal_id)
+        return proposal.proposal_id
 
     def get_proposal_list(self, user_email):
         proposal_list = []

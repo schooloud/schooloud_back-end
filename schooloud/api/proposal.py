@@ -13,8 +13,15 @@ def get_proposal_detail(proposalId):
 @proposal.route('/create', methods=['POST'])
 def create_proposal():
     params = request.get_json()
-    return proposalController.set_proposal(params['purpose'], params['name'], params['instanceNum'], params['cpu'],
-                                           params['memory'], params['storage'], params['author_email'], params['endAt'])
+    response = ''
+    response_code = 200
+    try:
+        proposal_id = proposalController.set_proposal(params)
+        response = str(proposal_id)
+    except Exception:
+        pass
+
+    return response
 
 
 @proposal.route('/list')

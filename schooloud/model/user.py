@@ -4,7 +4,7 @@ from schooloud.libs.database import db
 class User(db.Model):
     __tablename__ = 'user'
     email = db.Column(db.String(50), primary_key=True)
-    studentId = db.Column(db.String(20))
+    student_id = db.Column(db.String(20))
     name = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(20), nullable=False)
     major = db.Column(db.String(30))
