@@ -40,7 +40,7 @@ def get_proposal_list():
     response_code = 200
     try:
         proposal_list = proposalController.get_proposal_list(params)
-        response = proposal_list
+        response = {"proposals": proposal_list}
     except Exception:
         pass
 
