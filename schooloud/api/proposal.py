@@ -38,6 +38,7 @@ def create_proposal():
 
 
 @proposal.route('/list')
+@session_authenticate
 def get_proposal_list():
     params = request.get_json()
     response = ''
@@ -52,6 +53,7 @@ def get_proposal_list():
 
 
 @proposal.route('/approve', methods=['POST'])
+@session_authenticate
 def approve_proposal():
     params = request.get_json()
     response = ''
