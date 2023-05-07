@@ -4,10 +4,13 @@ from schooloud.blueprints import proposal
 from schooloud.controller.ProposalController import ProposalController
 from flask import request
 
+from schooloud.libs.decorator import session_authenticate
+
 proposalController = ProposalController()
 
 
 @proposal.route('/detail/<proposal_id>')
+@session_authenticate
 def get_proposal_detail(proposal_id):
     response = ''
     response_code = 200
@@ -20,6 +23,7 @@ def get_proposal_detail(proposal_id):
 
 
 @proposal.route('/create', methods=['POST'])
+@session_authenticate
 def create_proposal():
     params = request.get_json()
     response = ''
@@ -34,12 +38,13 @@ def create_proposal():
 
 
 @proposal.route('/list')
+@session_authenticate
 def get_proposal_list():
     params = request.get_json()
     response = ''
     response_code = 200
     try:
-        proposal_list = proposalController.get_proposal_list(params)
+        proposal_list = proposalController.get_proposal_list(params, request.cookies.get('email'))
         response = {"proposals": proposal_list}
     except Exception:
         pass
@@ -48,6 +53,7 @@ def get_proposal_list():
 
 
 @proposal.route('/approve', methods=['POST'])
+@session_authenticate
 def approve_proposal():
     params = request.get_json()
     response = ''

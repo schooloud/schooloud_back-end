@@ -30,8 +30,7 @@ class ProposalController:
         db.session.commit()
         return proposal.proposal_id
 
-    def get_proposal_list(self, request_data):
-        user_email = request_data['user_email']
+    def get_proposal_list(self, request_data, user_email):
         proposal_list = []
 
         user = User.query.filter(User.email == user_email).one()
