@@ -4,10 +4,13 @@ from schooloud.blueprints import proposal
 from schooloud.controller.ProposalController import ProposalController
 from flask import request
 
+from schooloud.libs.decorator import session_authenticate
+
 proposalController = ProposalController()
 
 
 @proposal.route('/detail/<proposal_id>')
+@session_authenticate
 def get_proposal_detail(proposal_id):
     response = ''
     response_code = 200
@@ -20,6 +23,7 @@ def get_proposal_detail(proposal_id):
 
 
 @proposal.route('/create', methods=['POST'])
+@session_authenticate
 def create_proposal():
     params = request.get_json()
     response = ''
