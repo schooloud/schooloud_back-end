@@ -68,7 +68,7 @@ class UserController:
             domain_id="default"
         )
 
-        return user.email
+        return Response("", status=200, mimetype="application/json")
 
     # 이메일 중복 체크
     def check_email(self, params):
