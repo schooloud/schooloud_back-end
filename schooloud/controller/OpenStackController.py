@@ -24,16 +24,16 @@ class OpenStackController:
     def create_connection(self, email):
         # Find user and project for connection
         user = User.query.filter(User.email == email).one()
-        project = Project.query.filter(Project.project_id == StudentInProject.query.filter(
-            StudentInProject.student_email == email).one().project_id).one()
+        # project = Project.query.filter(Project.project_id == StudentInProject.query.filter(
+        #     StudentInProject.student_email == email).one().project_id).one()
         # return connection
         return openstack.connect(
             auth_url="http://211.37.146.151/identity",
             username=user.email,
             password=user.password,
-            # project_id="bb06aa24a8554a6b9d3754facaabffbd",
-            project_id=project.project_id,
-            project_name=project.project_name,
+            project_id="bb06aa24a8554a6b9d3754facaabffbd",
+            # project_id=project.project_id,
+            # project_name=project.project_name,
             user_domain_name="Default",
             project_domain_name="default",
             region_name="RegionOne",
