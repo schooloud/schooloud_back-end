@@ -4,6 +4,8 @@ from schooloud.model.user import User
 
 from schooloud.libs.database import db
 
+from flask import jsonify, Response, abort
+
 class UserController:
     def __init__(self):
         pass
@@ -22,11 +24,15 @@ class UserController:
 
     # 로그인
     def authenticate(self, params):
-        user = User.query.filter(User.email == params['email']).one()
-        if user.password != params['password']:
-            return False
-        else:
-            return user
+        try:
+            user = User.query.filter(User.email == params['email']).one()
+            if user.password != params['password']:
+                return abort(404)
+            else:
+                # Cookie creation
+                return user.email
+        except NoResultFound:
+            return abort(404)
 
     # 회원가입
     def create_user(self, params):
@@ -45,13 +51,22 @@ class UserController:
     # 이메일 중복 체크
     def check_email(self, params):
         try:
-            user = User.query.filter(User.email==params['email']).one()
-            return False
+            user = User.query.filter(User.email == params['email']).one()
+            return abort(404)
         except NoResultFound:
-            return True
+            return Response("",status=200,mimetype='application/json')
 
     # 유저 전체 목록
     def get_user_list(self):
         users = User.query.all()
-        return users
+        user_list = []
+        for user in users:
+            user_list.append({
+                "email":user.email,
+                "name":user.name,
+                "major":user.major,
+                "studentId":user.studentId,
+                "role":user.role
+            })
+        return jsonify({"users":user_list})
 

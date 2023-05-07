@@ -29,10 +29,10 @@ def create_app():
         app.register_blueprint(bp, url_prefix=bp.url_prefix)
 
     # import all models
-    model_path = importlib_find('model')
-    model_path = model_path.submodule_search_locations[0]
-    models = ['.'.join(('model', os.path.split(f)[-1][:-3]))for f in glob('{}/[!_]*.py'.format(model_path))]
-    for m in models:
-        import_module(m)
+    # model_path = importlib_find('model')
+    # model_path = model_path.submodule_search_locations[0]
+    # models = ['.'.join(('model', os.path.split(f)[-1][:-3]))for f in glob('{}/[!_]*.py'.format(model_path))]
+    # for m in models:
+    #     import_module(m)
 
     return app
