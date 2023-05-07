@@ -6,7 +6,6 @@ keypairController = KeypairController()
 
 @keypair.route('/create', methods=['POST'])
 def create_keypair():
-    print(request.cookies.get('email'))
     return keypairController.create_keypair(request.get_json(), request.cookies.get('email'))
 
 @keypair.route('/list', methods=['POST'])
