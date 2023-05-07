@@ -1,3 +1,4 @@
+import openstack
 from sqlalchemy.exc import NoResultFound
 
 from schooloud.model.user import User
@@ -6,6 +7,12 @@ from schooloud.libs.database import db
 
 from flask import jsonify, Response, abort
 
+from openstack.identity.v3._proxy import Proxy
+from openstack.identity.v3.user import User as KeystoneUser
+
+from schooloud.controller.OpenStackController import OpenStackController
+
+openstack_controller = OpenStackController()
 class UserController:
     def __init__(self):
         pass
@@ -36,6 +43,7 @@ class UserController:
 
     # 회원가입
     def create_user(self, params):
+        # Save new user on Back-end DB
         user = User(
             email=params['email'],
             student_id=params['student_id'],
@@ -46,7 +54,21 @@ class UserController:
         )
         db.session.add(user)
         db.session.commit()
-        return user.email
+
+        # Save new user on OpenStack keystone db
+        conn = openstack_controller.create_admin_connection()
+        keystone_user = KeystoneUser(
+            name=user.name,
+            password=user.password,
+            domain_id="default"
+        )
+        conn.create_user(
+            name=user.email,
+            password=user.password,
+            domain_id="default"
+        )
+
+        return Response("", status=200, mimetype="application/json")
 
     # 이메일 중복 체크
     def check_email(self, params):
