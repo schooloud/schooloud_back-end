@@ -14,7 +14,7 @@ class UserController:
     def get_user(self, email):
         user = User.query.filter(User.email == email).one()
         user_dict = {
-            'studentId': user.studentId,
+            'student_id': user.studentd_id,
             'name': user.name,
             'password': user.password,
             'major': user.major,
@@ -38,7 +38,7 @@ class UserController:
     def create_user(self, params):
         user = User(
             email=params['email'],
-            studentId=params['studentId'],
+            student_id=params['student_id'],
             name=params['name'],
             password=params['password'],
             major=params['major'],
@@ -65,7 +65,7 @@ class UserController:
                 "email":user.email,
                 "name":user.name,
                 "major":user.major,
-                "studentId":user.studentId,
+                "student_id":user.student_id,
                 "role":user.role
             })
         return jsonify({"users":user_list})
