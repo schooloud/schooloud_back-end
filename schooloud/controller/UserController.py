@@ -6,6 +6,10 @@ from schooloud.libs.database import db
 
 from flask import jsonify, Response, abort
 
+from schooloud.controller.SessionController import SessionController
+sessionController = SessionController()
+
+
 class UserController:
     def __init__(self):
         pass
@@ -23,14 +27,16 @@ class UserController:
         return user_dict
 
     # 로그인
-    def authenticate(self, params):
+    def authenticate(self, params, response):
         try:
             user = User.query.filter(User.email == params['email']).one()
             if user.password != params['password']:
                 return abort(404)
             else:
                 # Cookie creation
-                return user.email
+                response = sessionController.create_session_key(user.email, response)
+                response.set_cookie('role', user.role)
+                return response
         except NoResultFound:
             return abort(404)
 
