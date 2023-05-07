@@ -1,7 +1,6 @@
 from schooloud.blueprints import user
 from schooloud.controller.UserController import UserController
 from flask import request, abort
-from schooloud.model.user import User
 
 userController = UserController()
 

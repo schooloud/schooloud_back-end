@@ -3,14 +3,14 @@ from schooloud.libs.database import db
 
 class Project(db.Model):
     __tablename__ = 'project'
-    projectId = db.Column(db.String(32), primary_key=True)
-    isDeleted = db.Column(db.Boolean, nullable=False)
-    projectName = db.Column(db.String(30), nullable=False)
+    project_id = db.Column(db.String(32), primary_key=True)
+    is_deleted = db.Column(db.Boolean, nullable=False)
+    project_name = db.Column(db.String(30), nullable=False)
     cpu = db.Column(db.Integer, nullable=False)
     memory = db.Column(db.Integer, nullable=False)
     storage = db.Column(db.Integer, nullable=False)
-    createAt = db.Column(db.DateTime(), nullable=False)
-    endAt = db.Column(db.DateTime(), nullable=False)
+    create_at = db.Column(db.DateTime(), nullable=False)
+    end_at = db.Column(db.DateTime(), nullable=False)
 
     # instances = db.relationship("Instance", back_populates="project")
     # quataRequests = db.relationship("QuataRequest", back_populates="project")
