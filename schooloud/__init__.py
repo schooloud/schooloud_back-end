@@ -35,5 +35,4 @@ def create_app():
     # for m in models:
     #     import_module(m)
 
-
     return app

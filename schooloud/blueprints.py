@@ -10,6 +10,7 @@ def _factory(partial_module_string, url_prefix):
 
 hello = _factory('hello', '/hello_world')
 hello_github = _factory('hello_github', '/hello_github')
+user = _factory('user', '/api/v1/user')
 proposal = _factory('proposal', '/api/v1/proposal')
 
-all_blueprints = (hello, hello_github, proposal)
+all_blueprints = (hello, hello_github, proposal, user)
