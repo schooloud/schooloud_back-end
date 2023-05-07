@@ -44,7 +44,7 @@ def get_proposal_list():
     response = ''
     response_code = 200
     try:
-        proposal_list = proposalController.get_proposal_list(params)
+        proposal_list = proposalController.get_proposal_list(params, request.cookies.get('email'))
         response = {"proposals": proposal_list}
     except Exception:
         pass
