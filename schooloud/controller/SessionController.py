@@ -14,3 +14,8 @@ class SessionController:
         response.set_cookie('session_key', session.session_key)
         response.set_cookie('expired_at', datetime.strftime(session.expired_at, "%Y-%m-%d"))
         return response
+
+    def delete_session(self, session_key):
+        Session.query.filter(Session.session_key == session_key).delete()
+        db.session.commit()
+        return

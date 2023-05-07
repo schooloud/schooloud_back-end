@@ -98,3 +98,6 @@ class UserController:
             })
         return jsonify({"users":user_list})
 
+    def user_logout(self, session_key):
+        sessionController.delete_session(session_key)
+        return ''
