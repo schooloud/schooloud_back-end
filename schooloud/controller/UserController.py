@@ -35,6 +35,8 @@ class UserController:
             else:
                 # Cookie creation
                 response = sessionController.create_session_key(user.email, response)
+                response.set_cookie('email', user.email)
+                response.set_cookie('name', user.name)
                 response.set_cookie('role', user.role)
                 return response
         except NoResultFound:
