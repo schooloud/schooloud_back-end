@@ -1,6 +1,7 @@
 from schooloud.blueprints import user
 from schooloud.controller.UserController import UserController
-from flask import request, make_response
+
+from flask import request, make_response, abort
 from schooloud.model.user import User
 
 userController = UserController()
@@ -26,7 +27,10 @@ def emailCheck():
 
 @user.route('/register', methods=['POST'])
 def register():
-    return userController.create_user(request.get_json())
+    try:
+        return userController.create_user(request.get_json())
+    except:
+        return abort(404)
 
 
 @user.route('/list')
