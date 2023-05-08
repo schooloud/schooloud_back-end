@@ -1,7 +1,7 @@
 from schooloud.model.instance import Instance
 from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
-import pprint
+from schooloud.libs.database import db
 
 openstack_controller = OpenStackController()
 
@@ -49,9 +49,13 @@ class InstanceController:
                                               key_name=keypair.name
                                               )
 
-        instance = conn.compute.wait_for_server(instance)
+        conn.compute.wait_for_server(instance)
 
         # add instance to database
+        instance = Instance(instance_id=instance.id,
+                            project_id=project_id)
+        db.session.add(instance)
+        db.session.commit()
 
         return '200'
 
