@@ -59,7 +59,7 @@ def approve_proposal():
     response = ''
     response_code = 200
     try:
-        proposal_id = proposalController.update_proposal_state(params)
+        response = proposalController.update_proposal_state(params)
     except Exception:
         pass
     return response
