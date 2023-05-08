@@ -2,6 +2,8 @@ from schooloud.blueprints import user
 from schooloud.controller.UserController import UserController
 
 from flask import request, make_response, abort
+
+from schooloud.libs.decorator import session_authenticate
 from schooloud.model.user import User
 
 userController = UserController()
@@ -33,5 +35,6 @@ def register():
 
 
 @user.route('/list')
+@session_authenticate
 def list():
     return userController.get_user_list()
