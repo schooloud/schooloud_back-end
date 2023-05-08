@@ -18,8 +18,7 @@ def login():
 
 @user.route('/logout', methods=['POST'])
 def logout():
-    # session db update
-    return userController
+    return userController.user_logout(request.cookies.get('session_key'))
 
 
 @user.route('/email-check', methods=['POST'])

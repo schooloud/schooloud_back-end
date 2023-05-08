@@ -14,5 +14,7 @@ user = _factory('user', '/api/v1/user')
 proposal = _factory('proposal', '/api/v1/proposal')
 keypair = _factory('keypair', '/api/v1/keypair')
 project = _factory('project', '/api/v1/project')
+flavor = _factory('flavor', '/api/v1/flavor')
 
-all_blueprints = (hello, hello_github, proposal, user, keypair, project)
+all_blueprints = (hello, hello_github, proposal, user, keypair, flavor, project)
+
