@@ -27,7 +27,19 @@ class InstanceController:
         keypair = conn.compute.find_keypair(keypair_name)
 
         # project quata check
+        current_cpu_usage, current_ram_usage, current_disk_usage = 0, 0, 0
+        for server in conn.compute.servers():
+            current_cpu_usage += server.flavor['vcpus']
+            current_ram_usage += server.flavor['ram'] / 1024
+            current_disk_usage += server.flavor['disk']
+
         project = Project.query.filter(Project.project_id == project_id).one()
+        if project.cpu < current_cpu_usage + flavor['vcpus']:
+            return {"message": "exceed cpu usage"}
+        if project.memory < current_ram_usage + flavor['ram']/1024:
+            return {"message": "exceed memory usage"}
+        if project.storage < current_disk_usage + flavor['disk']:
+            return {"message": "exceed disk usage"}
 
         # create instance
         instance = conn.compute.create_server(name=instance_name,
@@ -38,7 +50,6 @@ class InstanceController:
                                               )
 
         instance = conn.compute.wait_for_server(instance)
-
 
         return '200'
 
@@ -56,7 +67,6 @@ class InstanceController:
 
     def get_instance_list(self, user_email, project_id):
         conn = openstack_controller.create_connection(user_email)
-
 
         return
 
