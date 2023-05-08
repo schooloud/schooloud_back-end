@@ -19,7 +19,7 @@ class ProjectController:
         pass
 
     def get_project(self, project_id):
-        project = Project.query.filter(Project.projectId == project_id).one()
+        project = Project.query.filter(Project.project_id == project_id).one()
         project_dict = {
             'is_deleted': project.is_deleted,
             'name': project.project_name,

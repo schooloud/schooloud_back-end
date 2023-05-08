@@ -5,10 +5,11 @@ from flask import request
 instanceController = InstanceController()
 
 
-@instance.route('/create')
+@instance.route('/create', methods=['POST'])
 def create_instance():
-
-    return
+    params = request.get_json()
+    response = instanceController.create_instance(params, request.cookies.get('email'))
+    return response
 
 
 @instance.route('/unpause')
