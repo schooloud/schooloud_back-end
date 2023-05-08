@@ -24,10 +24,11 @@ def pause_instance():
     return
 
 
-@instance.route('/delete')
+@instance.route('/delete', methods=['POST'])
 def delete_instance():
-
-    return
+    params = request.get_json()
+    response = instanceController.delete_instance(params, request.cookies.get('email'))
+    return response
 
 
 @instance.route('/reboot')

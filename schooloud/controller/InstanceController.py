@@ -57,7 +57,7 @@ class InstanceController:
         db.session.add(instance)
         db.session.commit()
 
-        return '200'
+        return {"instance_id": instance.instance_id}
 
     def unpause_instance(self):
         return
@@ -65,8 +65,22 @@ class InstanceController:
     def pause_instance(self):
         return
 
-    def delete_instance(self):
-        return
+    def delete_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # delete instance
+        instance = conn.compute.find_server(instance_id)
+        conn.compute.delete_server(instance)
+
+        # delete from database
+        Instance.query.filter(Instance.instance_id == instance_id).delete()
+        db.session.commit()
+
+        return ''
 
     def reboot_instance(self):
         return
