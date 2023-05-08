@@ -75,6 +75,8 @@ class ProjectController:
             student_email=member,
             project_id=project
         )
+        db.session.add(student_in_project)
+        db.session.commit()
         return student_in_project
 
     def project_list(self, email):
@@ -92,7 +94,6 @@ class ProjectController:
                     "project_name":project.project_name
                 }
             )
-            print(projects)
         return jsonify({"projects":projects})
 
     def project_detail(self, project_id, email, role):
@@ -114,11 +115,9 @@ class ProjectController:
                     .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage, Project.end_at)
                     .one()
                 )
-            print(project)
             # Get current instance number on openstack
             conn = openstack_controller.create_connection_with_project_id(email, project_id)
             instance_num = len(conn.list_servers())
-            print(instance_num)
             # Get members
             students = (
                 StudentInProject.query.filter(StudentInProject.project_id == project_id)
@@ -126,7 +125,6 @@ class ProjectController:
                 .add_columns(User.name)
                 .all()
             )
-            print(students)
             members = []
 
             for student in students:
@@ -136,7 +134,6 @@ class ProjectController:
                         "email":student[0].student_email
                     }
                 )
-            print(members)
         except NoResultFound:
             return abort(400)
 
