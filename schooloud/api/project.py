@@ -21,7 +21,8 @@ def create_project():
 @session_authenticate
 def add_member_to_project():
     try:
-        return projectController.add_member_to_project(request.get_json())
+        student_in_project = projectController.add_member_to_project(request.get_json())
+        return Response("",status=200)
     except:
         return abort(404)
 
