@@ -51,6 +51,8 @@ class InstanceController:
 
         instance = conn.compute.wait_for_server(instance)
 
+        # add instance to database
+
         return '200'
 
     def unpause_instance(self):

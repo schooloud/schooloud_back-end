@@ -66,18 +66,18 @@ class ProjectController:
     def add_member_to_project(self, params):
         project = params['project_id']
         member = params['email']
+
         # Get role, userid and Add member
         conn = openstack_controller.create_admin_connection()
         user_id = conn.get_user(name_or_id=member).id
         role = conn.get_role(name_or_id='member').id
-        print(user_id, role)
         conn.identity.assign_project_role_to_user(project=project, user=user_id, role=role)
+
         # add member to student in project
         student_in_project = StudentInProject(
             student_email=member,
             project_id=project
         )
-        print(student_in_project.student_email, student_in_project.project_id)
         db.session.add(student_in_project)
         db.session.commit()
         return student_in_project
