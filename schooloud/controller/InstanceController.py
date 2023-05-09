@@ -59,11 +59,31 @@ class InstanceController:
 
         return {"instance_id": instance.instance_id}
 
-    def unpause_instance(self):
-        return
+    def unpause_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
 
-    def pause_instance(self):
-        return
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # unpause instance
+        instance = conn.compute.find_server(instance_id)
+        conn.compute.unpause_server(instance)
+
+        return ''
+
+    def pause_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # pause instance
+        instance = conn.compute.find_server(instance_id)
+        conn.compute.pause_server(instance)
+
+        return ''
 
     def delete_instance(self, request_data, user_email):
         project_id = request_data['project_id']
@@ -82,8 +102,23 @@ class InstanceController:
 
         return ''
 
-    def reboot_instance(self):
-        return
+    def reboot_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # reboot instance
+        instance = conn.compute.find_server(instance_id)
+        if instance.status == 'ACTIVE':
+            conn.compute.reboot_server(instance, 'SOFT')
+        elif instance.status == 'PAUSED':
+            conn.compute.reboot_server(instance, 'HARD')
+        else:
+            {"message": "cannot reboot server"}
+
+        return {"message": "successfully rebooted"}
 
     def get_instance_list(self, user_email, project_id):
         conn = openstack_controller.create_connection(user_email)
