@@ -1,5 +1,6 @@
 from sqlalchemy.exc import NoResultFound
 
+from schooloud.controller.ProjectController import ProjectController
 from schooloud.model.proposal import Proposal
 from schooloud.libs.database import db
 from schooloud.model.user import User
@@ -12,7 +13,6 @@ class ProposalController:
     def get_proposal(self, proposal_id):
         proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id).one()
         return proposal.as_dict()
-
 
     def set_proposal(self, request_data):
         purpose = request_data['purpose']
@@ -51,11 +51,22 @@ class ProposalController:
         if is_approved:
             proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id)
             proposal.update({"status": "APPROVED"})
-            # 프로젝트 생성 함수 호출
+            author_email = Proposal.query.filter(Proposal.proposal_id == proposal_id).one().author_email
 
+            # 프로젝트 생성 함수 호출
+            projectController = ProjectController()
+            project_id = projectController.create_project(request_data, author_email)
+            return {
+                "message": "proposal APPROVED",
+                "proposal_id": proposal_id,
+                "project_id": project_id
+            }
 
         else:
             proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id)
             proposal.update({"status": "REJECTED"})
         db.session.commit()
-        return proposal_id
+        return {
+                "message": "proposal REJECTED",
+                "proposal_id": proposal_id
+            }

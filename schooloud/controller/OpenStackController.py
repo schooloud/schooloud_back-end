@@ -3,6 +3,7 @@ from schooloud.model.user import User
 from schooloud.model.project import Project
 from schooloud.model.studentInProject import StudentInProject
 
+
 class OpenStackController:
     def __init__(self):
         pass
@@ -25,7 +26,7 @@ class OpenStackController:
         # Find user and project for connection
         user = User.query.filter(User.email == email).one()
         project = Project.query.filter(Project.project_id == StudentInProject.query.filter(
-             StudentInProject.student_email == email).one().project_id).one()
+            StudentInProject.student_email == email).one().project_id).one()
         # return connection
         return openstack.connect(
             auth_url="http://211.37.146.151/identity",

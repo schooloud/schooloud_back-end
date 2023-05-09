@@ -11,15 +11,15 @@ from schooloud.model.studentInProject import StudentInProject
 from flask import jsonify, abort
 from schooloud.model.user import User
 
-
 openstack_controller = OpenStackController()
+
 
 class ProjectController:
     def __init__(self):
         pass
 
-    def get_project(self, projectId):
-        project = Project.query.filter(Project.projectId == projectId).one()
+    def get_project(self, project_id):
+        project = Project.query.filter(Project.project_id == project_id).one()
         project_dict = {
             'is_deleted': project.is_deleted,
             'name': project.project_name,
@@ -66,18 +66,18 @@ class ProjectController:
     def add_member_to_project(self, params):
         project = params['project_id']
         member = params['email']
+
         # Get role, userid and Add member
         conn = openstack_controller.create_admin_connection()
         user_id = conn.get_user(name_or_id=member).id
         role = conn.get_role(name_or_id='member').id
-        print(user_id, role)
         conn.identity.assign_project_role_to_user(project=project, user=user_id, role=role)
+
         # add member to student in project
         student_in_project = StudentInProject(
             student_email=member,
             project_id=project
         )
-        print(student_in_project.student_email, student_in_project.project_id)
         db.session.add(student_in_project)
         db.session.commit()
         return student_in_project
@@ -93,11 +93,11 @@ class ProjectController:
         for project in user_projects:
             projects.append(
                 {
-                    "project_id":project[0].project_id,
-                    "project_name":project.project_name
+                    "project_id": project[0].project_id,
+                    "project_name": project.project_name
                 }
             )
-        return jsonify({"projects":projects})
+        return jsonify({"projects": projects})
 
     def project_detail(self, project_id, email, role):
         # project에 연결된 email 이거나, role이 admin인 경우에만 동작
@@ -107,7 +107,8 @@ class ProjectController:
                 project = (
                     StudentInProject.query.filter(StudentInProject.project_id == project_id)
                     .join(Project, StudentInProject.project_id == Project.project_id)
-                    .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage, Project.end_at)
+                    .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
+                                 Project.end_at)
                     .one()
                 )
             else:
@@ -115,7 +116,8 @@ class ProjectController:
                     StudentInProject.query.filter(StudentInProject.student_email == email)
                     .filter(StudentInProject.project_id == project_id)
                     .join(Project, StudentInProject.project_id == Project.project_id)
-                    .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage, Project.end_at)
+                    .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
+                                 Project.end_at)
                     .one()
                 )
             # Get current instance number on openstack
@@ -133,20 +135,20 @@ class ProjectController:
             for student in students:
                 members.append(
                     {
-                        "name":student.name,
-                        "email":student[0].student_email
+                        "name": student.name,
+                        "email": student[0].student_email
                     }
                 )
         except NoResultFound:
             return abort(400)
 
         return jsonify({
-            "name":project.project_name,
-            "create_at":project.create_at,
-            "instance_num":instance_num,
-            "cpu":project.cpu,
-            "memory":project.memory,
-            "storage":project.storage,
-            "end_at":project.end_at,
-            "members":members
+            "name": project.project_name,
+            "create_at": project.create_at,
+            "instance_num": instance_num,
+            "cpu": project.cpu,
+            "memory": project.memory,
+            "storage": project.storage,
+            "end_at": project.end_at,
+            "members": members
         })
