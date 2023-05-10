@@ -23,7 +23,7 @@ class InstanceController:
         # find image, flavor, network, keypair from openstack
         image = conn.image.find_image(image_name)
         flavor = conn.compute.find_flavor(flavor_name)
-        network = conn.network.find_network('shared')
+        network = conn.network.find_network('private')
         keypair = conn.compute.find_keypair(keypair_name)
 
         # project quata check
@@ -36,7 +36,7 @@ class InstanceController:
         project = Project.query.filter(Project.project_id == project_id).one()
         if project.cpu < current_cpu_usage + flavor['vcpus']:
             return {"message": "exceed cpu usage"}
-        if project.memory < current_ram_usage + flavor['ram']/1024:
+        if project.memory < current_ram_usage + flavor['ram'] / 1024:
             return {"message": "exceed memory usage"}
         if project.storage < current_disk_usage + flavor['disk']:
             return {"message": "exceed disk usage"}
@@ -50,6 +50,9 @@ class InstanceController:
                                               )
 
         conn.compute.wait_for_server(instance)
+        
+        # assign floating ip to instance
+        ################################# 추가 필요
 
         # add instance to database
         instance = Instance(instance_id=instance.id,
@@ -120,10 +123,16 @@ class InstanceController:
 
         return {"message": "successfully rebooted"}
 
-    def get_instance_list(self, user_email, project_id):
+    def get_instance_list(self, project_id, user_email):
         conn = openstack_controller.create_connection(user_email)
 
-        return
+        instance_list = []
+        for server in conn.compute.servers():
+            instance = {
+
+            }
+
+        return {"instance_list": instance_list}
 
     def get_instance_detail(self):
         return
