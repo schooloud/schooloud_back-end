@@ -123,14 +123,30 @@ class InstanceController:
 
         return {"message": "successfully rebooted"}
 
-    def get_instance_list(self, project_id, user_email):
-        conn = openstack_controller.create_connection(user_email)
+    def get_instance_list(self, request_data, user_email):
+        project_id = request_data['project_id']
 
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # get instance list
         instance_list = []
         for server in conn.compute.servers():
             instance = {
-
+                "instance_id": server.id,
+                "instance_name": server.name,
+                "image_name": conn.image.find_image(server.image.id).name,
+                "flavor": server.flavor['original_name'],
+                "keypair_name": server.key_name,
+                "status": server.status,
+                "ip_addresses": []
             }
+
+            # get instance's ip address
+            for ip in server.addresses['private']:
+                instance['ip_addresses'].append(ip['addr'])
+
+            instance_list.append(instance)
 
         return {"instance_list": instance_list}
 

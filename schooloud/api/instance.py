@@ -42,8 +42,9 @@ def reboot_instance():
 
 @instance.route('/list')
 def get_instance_list():
-
-    return
+    params = request.get_json()
+    response = instanceController.get_instance_list(params, request.cookies.get('email'))
+    return response
 
 
 @instance.route('/detail')
