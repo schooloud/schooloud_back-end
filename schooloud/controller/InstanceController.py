@@ -71,7 +71,10 @@ class InstanceController:
 
         # unpause instance
         instance = conn.compute.find_server(instance_id)
-        conn.compute.unpause_server(instance)
+        if instance.status == 'PAUSED':
+            conn.compute.unpause_server(instance)
+        else:
+            return {"message": "cannot unpause server"}
 
         return ''
 
@@ -84,7 +87,10 @@ class InstanceController:
 
         # pause instance
         instance = conn.compute.find_server(instance_id)
-        conn.compute.pause_server(instance)
+        if instance.status == 'ACTIVE':
+            conn.compute.pause_server(instance)
+        else:
+            return {"message": "cannot pause server"}
 
         return ''
 
@@ -122,7 +128,7 @@ class InstanceController:
         elif instance.status == 'PAUSED':
             conn.compute.reboot_server(instance, 'HARD')
         else:
-            {"message": "cannot reboot server"}
+            return {"message": "cannot reboot server"}
 
         return {"message": "successfully rebooted"}
 
