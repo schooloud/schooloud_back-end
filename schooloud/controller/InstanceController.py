@@ -23,7 +23,7 @@ class InstanceController:
         # find image, flavor, network, keypair from openstack
         image = conn.image.find_image(image_name)
         flavor = conn.compute.find_flavor(flavor_name)
-        network = conn.network.find_network('shared')
+        network = conn.network.find_network('private')
         keypair = conn.compute.find_keypair(keypair_name)
 
         # project quata check
@@ -36,7 +36,7 @@ class InstanceController:
         project = Project.query.filter(Project.project_id == project_id).one()
         if project.cpu < current_cpu_usage + flavor['vcpus']:
             return {"message": "exceed cpu usage"}
-        if project.memory < current_ram_usage + flavor['ram']/1024:
+        if project.memory < current_ram_usage + flavor['ram'] / 1024:
             return {"message": "exceed memory usage"}
         if project.storage < current_disk_usage + flavor['disk']:
             return {"message": "exceed disk usage"}
@@ -50,6 +50,9 @@ class InstanceController:
                                               )
 
         conn.compute.wait_for_server(instance)
+        
+        # assign floating ip to instance
+        ################################# 추가 필요
 
         # add instance to database
         instance = Instance(instance_id=instance.id,
@@ -59,11 +62,37 @@ class InstanceController:
 
         return {"instance_id": instance.instance_id}
 
-    def unpause_instance(self):
-        return
+    def unpause_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
 
-    def pause_instance(self):
-        return
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # unpause instance
+        instance = conn.compute.find_server(instance_id)
+        if instance.status == 'PAUSED':
+            conn.compute.unpause_server(instance)
+        else:
+            return {"message": "cannot unpause server"}
+
+        return ''
+
+    def pause_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # pause instance
+        instance = conn.compute.find_server(instance_id)
+        if instance.status == 'ACTIVE':
+            conn.compute.pause_server(instance)
+        else:
+            return {"message": "cannot pause server"}
+
+        return ''
 
     def delete_instance(self, request_data, user_email):
         project_id = request_data['project_id']
@@ -75,6 +104,9 @@ class InstanceController:
         # delete instance
         instance = conn.compute.find_server(instance_id)
         conn.compute.delete_server(instance)
+        
+        # return floating ip from
+        ############################ 추가 필요
 
         # delete from database
         Instance.query.filter(Instance.instance_id == instance_id).delete()
@@ -82,13 +114,59 @@ class InstanceController:
 
         return ''
 
-    def reboot_instance(self):
-        return
+    def reboot_instance(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
 
-    def get_instance_list(self, user_email, project_id):
-        conn = openstack_controller.create_connection(user_email)
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
-        return
+        # reboot instance
+        instance = conn.compute.find_server(instance_id)
+        if instance.status == 'ACTIVE':
+            conn.compute.reboot_server(instance, 'SOFT')
+        elif instance.status == 'PAUSED':
+            conn.compute.reboot_server(instance, 'HARD')
+        else:
+            return {"message": "cannot reboot server"}
 
-    def get_instance_detail(self):
-        return
+        return {"message": "successfully rebooted"}
+
+    def get_instance_list(self, request_data, user_email):
+        project_id = request_data['project_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # get instance list
+        instance_list = []
+        for server in conn.compute.servers():
+            instance = {
+                "instance_id": server.id,
+                "instance_name": server.name,
+                "image_name": conn.image.find_image(server.image.id).name,
+                "flavor": server.flavor['original_name'],
+                "keypair_name": server.key_name,
+                "status": server.status,
+                "ip_addresses": []
+            }
+
+            # get instance's ip address
+            for ip in server.addresses['private']:
+                instance['ip_addresses'].append(ip['addr'])
+
+            instance_list.append(instance)
+
+        return {"instance_list": instance_list}
+
+    def get_instance_detail(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # get instance
+        instance = conn.compute.find_server(instance_id)
+
+        return ''

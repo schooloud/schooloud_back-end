@@ -12,16 +12,18 @@ def create_instance():
     return response
 
 
-@instance.route('/unpause')
+@instance.route('/unpause', methods=['POST'])
 def unpause_instance():
+    params = request.get_json()
+    response = instanceController.unpause_instance(params, request.cookies.get('email'))
+    return response
 
-    return
 
-
-@instance.route('/pause')
+@instance.route('/pause', methods=['POST'])
 def pause_instance():
-
-    return
+    params = request.get_json()
+    response = instanceController.pause_instance(params, request.cookies.get('email'))
+    return response
 
 
 @instance.route('/delete', methods=['POST'])
@@ -31,19 +33,22 @@ def delete_instance():
     return response
 
 
-@instance.route('/reboot')
+@instance.route('/reboot', methods=['POST'])
 def reboot_instance():
-
-    return
+    params = request.get_json()
+    response = instanceController.reboot_instance(params, request.cookies.get('email'))
+    return response
 
 
 @instance.route('/list')
 def get_instance_list():
-
-    return
+    params = request.get_json()
+    response = instanceController.get_instance_list(params, request.cookies.get('email'))
+    return response
 
 
 @instance.route('/detail')
 def get_instance_detail():
-
-    return
+    params = request.get_json()
+    response = instanceController.get_instance_detail(params, request.cookies.get('email'))
+    return response
