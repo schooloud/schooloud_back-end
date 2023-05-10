@@ -98,6 +98,9 @@ class InstanceController:
         # delete instance
         instance = conn.compute.find_server(instance_id)
         conn.compute.delete_server(instance)
+        
+        # return floating ip from
+        ############################ 추가 필요
 
         # delete from database
         Instance.query.filter(Instance.instance_id == instance_id).delete()
