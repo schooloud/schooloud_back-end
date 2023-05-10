@@ -49,5 +49,6 @@ def get_instance_list():
 
 @instance.route('/detail')
 def get_instance_detail():
-
-    return
+    params = request.get_json()
+    response = instanceController.get_instance_detail(params, request.cookies.get('email'))
+    return response

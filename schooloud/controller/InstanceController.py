@@ -150,5 +150,14 @@ class InstanceController:
 
         return {"instance_list": instance_list}
 
-    def get_instance_detail(self):
-        return
+    def get_instance_detail(self, request_data, user_email):
+        project_id = request_data['project_id']
+        instance_id = request_data['instance_id']
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # get instance
+        instance = conn.compute.find_server(instance_id)
+
+        return ''
