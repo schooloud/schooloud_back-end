@@ -2,6 +2,7 @@ from schooloud.model.instance import Instance
 from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.libs.database import db
+import random
 
 openstack_controller = OpenStackController()
 
@@ -18,7 +19,7 @@ class InstanceController:
         keypair_name = request_data['keypair_name']
 
         # openstack connection
-        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+        conn = openstack_controller.create_connection_with_project_id_lower_version(user_email, project_id)
 
         # find image, flavor, network, keypair from openstack
         image = conn.image.find_image(image_name)
@@ -52,13 +53,24 @@ class InstanceController:
         conn.compute.wait_for_server(instance)
 
         # assign floating ip to instance
-        ################################# 추가 필요
+        floating_ip = conn.create_floating_ip()
+        conn.compute.add_floating_ip_to_server(server=instance.id, address=floating_ip.floating_ip_address)
+
+        # create random port for port forwarding
+        while True:
+            port = random.randint(1024, 49151)
+            port_exists = db.session.query(Instance.query.filter(Instance.port == port).exists()).scalar()
+            if not port_exists:
+                break
 
         # add instance to database
         instance = Instance(instance_id=instance.id,
-                            project_id=project_id)
+                            project_id=project_id,
+                            port=port)
         db.session.add(instance)
         db.session.commit()
+
+        # call proxy api for setting routing rule
 
         return {"instance_id": instance.instance_id}
 
@@ -104,9 +116,11 @@ class InstanceController:
         # delete instance
         instance = conn.compute.find_server(instance_id)
         conn.compute.delete_server(instance)
+        conn.compute.wait_for_delete(instance)
 
         # return floating ip from openstack
-        ############################ 추가 필요
+        floating_ip = conn.network.find_available_ip()
+        conn.delete_floating_ip(floating_ip)
 
         # delete from database
         Instance.query.filter(Instance.instance_id == instance_id).delete()
