@@ -2,6 +2,7 @@ from schooloud.model.instance import Instance
 from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.libs.database import db
+import random
 
 openstack_controller = OpenStackController()
 
@@ -52,13 +53,20 @@ class InstanceController:
         conn.compute.wait_for_server(instance)
 
         # assign floating ip to instance
-        ################################# 추가 필요
+        while True:
+            port = random.randint(1024, 49151)
+            port_exists = db.session.query(Instance.query.filter(Instance.port == port).exists()).scalar()
+            if not port_exists:
+                break
 
         # add instance to database
         instance = Instance(instance_id=instance.id,
-                            project_id=project_id)
+                            project_id=project_id,
+                            port=port)
         db.session.add(instance)
         db.session.commit()
+
+        # call proxy api for setting routing rule
 
         return {"instance_id": instance.instance_id}
 

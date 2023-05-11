@@ -10,9 +10,10 @@ class Instance(db.Model):
 
     __table_args__ = {'extend_existing': True}
 
-    def __init__(self, instance_id, project_id):
+    def __init__(self, instance_id, project_id, port):
         self.instance_id = instance_id
         self.project_id = project_id
+        self.port = port
 
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns}
