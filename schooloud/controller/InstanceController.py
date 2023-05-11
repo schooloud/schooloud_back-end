@@ -19,7 +19,7 @@ class InstanceController:
         keypair_name = request_data['keypair_name']
 
         # openstack connection
-        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+        conn = openstack_controller.create_connection_with_project_id_lower_version(user_email, project_id)
 
         # find image, flavor, network, keypair from openstack
         image = conn.image.find_image(image_name)
@@ -113,12 +113,18 @@ class InstanceController:
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
-        # delete instance
+        # get floating ip
         instance = conn.compute.find_server(instance_id)
+        floating_ip = ''
+        for ip in instance.addresses['private']:
+            if ip['OS-EXT-IPS:type'] == 'floating':
+                floating_ip = ip['addr']
+
+        # delete instance
         conn.compute.delete_server(instance)
 
         # return floating ip from openstack
-        ############################ 추가 필요
+        conn.delete_floating_ip(floating_ip)
 
         # delete from database
         Instance.query.filter(Instance.instance_id == instance_id).delete()

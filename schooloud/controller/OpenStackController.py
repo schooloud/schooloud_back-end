@@ -54,6 +54,22 @@ class OpenStackController:
             project_domain_name="default",
             region_name="RegionOne",
             interface="public",
+            identity_api_version=3
+        )
+
+    def create_connection_with_project_id_lower_version(self, email, project_id):
+        user = User.query.filter(User.email == email).one()
+        project = Project.query.filter(Project.project_id == project_id).one()
+        return openstack.connect(
+            auth_url="http://211.37.146.151/identity",
+            username=user.email,
+            password=user.password,
+            project_id=project.project_id,
+            project_name=project.project_name,
+            user_domain_name="Default",
+            project_domain_name="default",
+            region_name="RegionOne",
+            interface="public",
             identity_api_version=3,
             compute_api_version=2.27
         )
