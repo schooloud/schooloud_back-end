@@ -61,7 +61,44 @@ class ProjectController:
         )
         db.session.add(student_in_project)
         db.session.commit()
+
+        conn = openstack_controller.create_connection_with_project_id(email=email, project_id=project.project_id)
+
+        # Create private network (with admin auth)
+        private_net = conn.create_network(
+            name="private"
+        )
+
+        # Update Security group Rule
+        security_group = conn.get_security_group(name_or_id="default").id
+        conn.create_security_group_rule(
+            secgroup_name_or_id=security_group
+        )
+
+        # Create subnet for private network
+        subnet = conn.create_subnet(
+            network_name_or_id=private_net.id,
+            subnet_name='private-subnet',
+            use_default_subnetpool=True,
+        )
+
+        # Create router to connect between public and private
+        public_net = conn.get_network(
+            name_or_id="public"
+        )
+
+        router = conn.create_router(
+            name="public-private-router",
+            ext_gateway_net_id=public_net.id
+        )
+
+        conn.add_router_interface(
+            router=router.id,
+            subnet_id=subnet.id
+        )
+
         return project.project_id
+
 
     def add_member_to_project(self, params):
         project = params['project_id']
