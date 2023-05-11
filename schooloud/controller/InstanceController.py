@@ -50,7 +50,7 @@ class InstanceController:
                                               )
 
         conn.compute.wait_for_server(instance)
-        
+
         # assign floating ip to instance
         ################################# 추가 필요
 
@@ -104,8 +104,8 @@ class InstanceController:
         # delete instance
         instance = conn.compute.find_server(instance_id)
         conn.compute.delete_server(instance)
-        
-        # return floating ip from
+
+        # return floating ip from openstack
         ############################ 추가 필요
 
         # delete from database
@@ -160,7 +160,6 @@ class InstanceController:
             instance['domain'] = domain
 
             instance_list.append(instance)
-
 
         return {"instance_list": instance_list}
 
