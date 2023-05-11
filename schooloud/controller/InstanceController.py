@@ -113,17 +113,13 @@ class InstanceController:
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
-        # get floating ip
-        instance = conn.compute.find_server(instance_id)
-        floating_ip = ''
-        for ip in instance.addresses['private']:
-            if ip['OS-EXT-IPS:type'] == 'floating':
-                floating_ip = ip['addr']
-
         # delete instance
+        instance = conn.compute.find_server(instance_id)
         conn.compute.delete_server(instance)
+        conn.compute.wait_for_delete(instance)
 
         # return floating ip from openstack
+        floating_ip = conn.network.find_available_ip()
         conn.delete_floating_ip(floating_ip)
 
         # delete from database
