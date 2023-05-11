@@ -53,6 +53,10 @@ class InstanceController:
         conn.compute.wait_for_server(instance)
 
         # assign floating ip to instance
+        floating_ip = conn.create_floating_ip()
+        conn.compute.add_floating_ip_to_server(server=instance.id, address=floating_ip.floating_ip_address)
+
+        # create random port for port forwarding
         while True:
             port = random.randint(1024, 49151)
             port_exists = db.session.query(Instance.query.filter(Instance.port == port).exists()).scalar()

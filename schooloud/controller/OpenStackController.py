@@ -54,5 +54,6 @@ class OpenStackController:
             project_domain_name="default",
             region_name="RegionOne",
             interface="public",
-            identity_api_version=3
+            identity_api_version=3,
+            compute_api_version=2.27
         )
