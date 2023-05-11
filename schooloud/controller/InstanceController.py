@@ -50,7 +50,7 @@ class InstanceController:
                                               )
 
         conn.compute.wait_for_server(instance)
-        
+
         # assign floating ip to instance
         ################################# 추가 필요
 
@@ -104,8 +104,8 @@ class InstanceController:
         # delete instance
         instance = conn.compute.find_server(instance_id)
         conn.compute.delete_server(instance)
-        
-        # return floating ip from
+
+        # return floating ip from openstack
         ############################ 추가 필요
 
         # delete from database
@@ -155,6 +155,10 @@ class InstanceController:
             for ip in server.addresses['private']:
                 instance['ip_addresses'].append(ip['addr'])
 
+            # get instance domain
+            domain = Instance.query.filter(Instance.instance_id == server.id).one().domain
+            instance['domain'] = domain
+
             instance_list.append(instance)
 
         return {"instance_list": instance_list}
@@ -169,4 +173,22 @@ class InstanceController:
         # get instance
         instance = conn.compute.find_server(instance_id)
 
-        return ''
+        response = {
+            "instance_id": instance.id,
+            "instance_name": instance.name,
+            "image_name": conn.image.find_image(instance.image.id).name,
+            "flavor": instance.flavor['original_name'],
+            "keypair_name": instance.key_name,
+            "status": instance.status,
+            "ip_addresses": []
+        }
+
+        # get instance's ip address
+        for ip in instance.addresses['private']:
+            response['ip_addresses'].append(ip['addr'])
+
+        # get instance domain
+        domain = Instance.query.filter(Instance.instance_id == instance_id).one().domain
+        response['domain'] = domain
+
+        return response
