@@ -17,6 +17,11 @@ class DomainController:
         instance_id = request_data['instance_id']
         domain = request_data['domain']
 
+        # check if same domain exists
+        query = Instance.query.filter(Instance.domain == domain+'.schooloud.cloud.')
+        if db.session.query(query.exists()).scalar():
+            return {"message": "ERROR: The same domain already exists"}
+
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
