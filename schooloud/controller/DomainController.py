@@ -72,16 +72,24 @@ class DomainController:
         if user.role != 'ADMIN':
             return {"message": "ERROR: user's role must be ADMIN"}
 
+        # openstack connection
+        conn = openstack_controller.create_admin_connection()
+
         # get domain list
         domain_list = []
         for instance in Instance.query.all():
             project_name = Project.query.filter(Project.project_id == instance.project_id).one().project_name
             instance_id = instance.instance_id
+            port = instance.port
             domain = instance.domain
+            instance_name = conn.compute.find_server(instance_id).name
+            print(instance)
             domain_list.append({
                 'project_name': project_name,
                 'instance_id': instance_id,
-                'domain': domain
+                'domain': domain,
+                'port': port,
+                'instance_name': instance_name
             })
 
         return {"domain_list": domain_list}
