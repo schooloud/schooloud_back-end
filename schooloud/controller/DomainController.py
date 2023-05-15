@@ -48,10 +48,13 @@ class DomainController:
 
         if not response['header']['isSuccessful']:
             return {"message": "ERROR: can't create record set"}
+        domain_id = response['recordset']['recordsetId']
+        domain = response['recordset']['recordsetName']
 
         # add domain to database
         instance = Instance.query.filter(Instance.instance_id == instance_id).one()
         instance.domain = domain
+        instance.domain_id = domain_id
         db.session.commit()
 
         return ''
