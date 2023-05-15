@@ -18,7 +18,7 @@ class DomainController:
         domain = request_data['domain']
 
         # check if same domain exists
-        query = Instance.query.filter(Instance.domain == domain+'.schooloud.cloud.')
+        query = Instance.query.filter(Instance.domain == domain + '.schooloud.cloud.')
         if db.session.query(query.exists()).scalar():
             return {"message": "ERROR: The same domain already exists"}
 
@@ -52,7 +52,7 @@ class DomainController:
             json=data).json()
 
         if not response['header']['isSuccessful']:
-            return {"message": "ERROR: can't create record set"}
+            return {"message": "ERROR: cannot create record set successfully"}
         domain_id = response['recordset']['recordsetId']
         domain = response['recordset']['recordsetName']
 
@@ -69,3 +69,21 @@ class DomainController:
 
     def get_port_list(self):
         return
+
+    def delete_domain(self, instance_id):
+        app_key = os.environ['APP_KEY']
+        domain_id = Instance.query.filter(Instance.instance_id == instance_id).one().domain_id
+
+        # get DNS_zone from NHN cloud
+        dns_zone_list = requests.get(
+            f'https://dnsplus.api.nhncloudservice.com/dnsplus/v1.0/appkeys/{app_key}/zones').json()
+        dns_zone_id = dns_zone_list['zoneList'][0]['zoneId']
+
+        # delete recode set
+        response = requests.delete(
+            f'https://dnsplus.api.nhncloudservice.com/dnsplus/v1.0/appkeys/{app_key}/zones/{dns_zone_id}/recordsets' +
+            f'?recordsetIdList={domain_id}').json()
+        if not response['header']['isSuccessful']:
+            return {"message": "ERROR: cannot delete record set successfully"}
+
+        return ''
