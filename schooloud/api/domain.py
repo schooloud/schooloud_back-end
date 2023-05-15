@@ -7,18 +7,19 @@ domainController = DomainController()
 
 @domain.route('/assign', methods=['POST'])
 def assign_domain():
-    response = domainController
+    params = request.get_json()
+    response = domainController.assign_domain(params, request.cookies.get('email'))
     return response
 
 
 @domain.route('/list')
 def get_domain_list():
-    response = domainController
+    response = domainController.get_domain_list()
     return response
 
 
 @domain.route('/portlist')
 def get_port_list():
-    response = domainController
+    response = domainController.get_port_list()
     return response
 
