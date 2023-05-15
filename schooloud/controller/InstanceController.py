@@ -1,10 +1,12 @@
 from schooloud.model.instance import Instance
 from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
+from schooloud.controller.DomainController import DomainController
 from schooloud.libs.database import db
 import random
 
 openstack_controller = OpenStackController()
+domain_controller = DomainController()
 
 
 class InstanceController:
@@ -109,6 +111,7 @@ class InstanceController:
     def delete_instance(self, request_data, user_email):
         project_id = request_data['project_id']
         instance_id = request_data['instance_id']
+        response = ''
 
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
@@ -122,11 +125,16 @@ class InstanceController:
         floating_ip = conn.network.find_available_ip()
         conn.delete_floating_ip(floating_ip)
 
+        # if domain exists, delete domain
+        instance = Instance.query.filter(Instance.instance_id == instance_id).one()
+        if instance.domain_id:
+            response = domain_controller.delete_domain(instance_id)
+
         # delete from database
         Instance.query.filter(Instance.instance_id == instance_id).delete()
         db.session.commit()
 
-        return ''
+        return response
 
     def reboot_instance(self, request_data, user_email):
         project_id = request_data['project_id']
