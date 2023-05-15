@@ -17,9 +17,3 @@ def get_domain_list():
     response = domainController.get_domain_list(request.cookies.get('email'))
     return response
 
-
-@domain.route('/portlist')
-def get_port_list():
-    response = domainController.get_port_list(request.cookies.get('email'))
-    return response
-

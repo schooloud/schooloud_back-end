@@ -86,9 +86,6 @@ class DomainController:
 
         return {"domain_list": domain_list}
 
-    def get_port_list(self, user_email):
-        return
-
     def delete_domain(self, instance_id):
         app_key = os.environ['APP_KEY']
         domain_id = Instance.query.filter(Instance.instance_id == instance_id).one().domain_id
