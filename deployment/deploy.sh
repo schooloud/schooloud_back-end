@@ -1,4 +1,5 @@
 #1. apt update (~)
+sudo apt update
 sudo apt-get update
 
 #2. github clone (~)
@@ -10,19 +11,25 @@ export FLASK_APP=schooloud
 cd /home/ubuntu/schooloud_back/schooloud
 DIR_HOME=$(pwd)
 export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
+export APP_KEY=OmnoSq4AMDz1g3EB
 
 #4. install from requirements.txt (~/schooloud_back)
 cd /home/ubuntu/schoooloud_back
  # install pip and zipp
+sudo su
+
 sudo apt install python3-flask
 sudo apt install python3-pip
 sudo apt-get install python3-zipp
  # pip install
 sudo pip install wheel
+sudo pip install requests -U
 sudo pip install -r ./requirements.txt # flask script 설치 에러 뜸
  # if flask version error
 sudo pip install -U flask
 sudo pip install -r ./requirements.txt
+sudo pip install openstackclient
+sudo pip install python-openstackclient
 
 #5. install uwsgi and nginx (~/schooloud_back)
 sudo apt-get install python3.8-dev
@@ -30,6 +37,8 @@ sudo apt-get install nginx
 sudo apt-get install uwsgi
 sudo apt-get install uwsgi-core
 sudo apt-get install uwsgi-plugin-python3
+
+sudo su ubuntu
 
 #6. make socket and logs directory (~)
 cd /home/ubuntu
