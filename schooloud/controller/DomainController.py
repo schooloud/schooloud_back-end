@@ -83,7 +83,6 @@ class DomainController:
             port = instance.port
             domain = instance.domain
             instance_name = conn.compute.find_server(instance_id).name
-            print(instance)
             domain_list.append({
                 'project_name': project_name,
                 'instance_id': instance_id,
