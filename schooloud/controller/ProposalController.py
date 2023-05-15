@@ -30,6 +30,20 @@ class ProposalController:
         db.session.commit()
         return proposal.proposal_id
 
+    def delete_proposal(self, request_data, user_email):
+        proposal_id = request_data['proposal_id']
+
+        # delete proposal
+        proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id)
+        if db.session.query(proposal.exists()).scalar():
+            proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id).one()
+
+            if proposal.status != 'APPROVED' and proposal.author_email == user_email:
+                Proposal.query.filter(Proposal.proposal_id == proposal_id).delete()
+                db.session.commit()
+
+        return ''
+
     def get_proposal_list(self, request_data, user_email):
         proposal_list = []
 

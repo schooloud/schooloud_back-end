@@ -37,6 +37,19 @@ def create_proposal():
     return response
 
 
+@proposal.route('/delete', methods=['POST'])
+@session_authenticate
+def delete_proposal():
+    params = request.get_json()
+    response = ''
+    try:
+        response = proposalController.delete_proposal(params, request.cookies.get('email'))
+    except Exception:
+        pass
+
+    return response
+
+
 @proposal.route('/list')
 @session_authenticate
 def get_proposal_list():

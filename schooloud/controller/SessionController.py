@@ -23,7 +23,7 @@ class SessionController:
 
         db.session.commit()
         response.set_cookie('session_key', session.session_key)
-        response.set_cookie('expired_at', datetime.strftime(session.expired_at, "%Y-%m-%d"))
+        response.set_cookie('expired_at', datetime.strftime(session.expired_at, "%Y-%m-%d %H:%M:%S"))
         return response
 
     def delete_session(self, session_key):
