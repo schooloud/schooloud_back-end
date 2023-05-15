@@ -1,6 +1,8 @@
 import requests
 import os
 from schooloud.model.instance import Instance
+from schooloud.model.user import User
+from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.libs.database import db
 
@@ -64,10 +66,27 @@ class DomainController:
 
         return ''
 
-    def get_domain_list(self):
-        return
+    def get_domain_list(self, user_email):
+        # check role
+        user = User.query.filter(User.email == user_email).one()
+        if user.role != 'ADMIN':
+            return {"message": "ERROR: user's role must be ADMIN"}
 
-    def get_port_list(self):
+        # get domain list
+        domain_list = []
+        for instance in Instance.query.all():
+            project_name = Project.query.filter(Project.project_id == instance.project_id).one().project_name
+            instance_id = instance.instance_id
+            domain = instance.domain
+            domain_list.append({
+                'project_name': project_name,
+                'instance_id': instance_id,
+                'domain': domain
+            })
+
+        return {"domain_list": domain_list}
+
+    def get_port_list(self, user_email):
         return
 
     def delete_domain(self, instance_id):
