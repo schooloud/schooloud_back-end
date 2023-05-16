@@ -81,11 +81,8 @@ class InstanceController:
             'floating_ip': floating_ip.floating_ip_address,
             'port': str(port)
         }
-        ###########################################################
-        print(data)
-        response = requests.post(f'https://{proxy_server}/api/v1/ssh/create', json=data).json()
-        print(response)
-        ###########################################################
+        response = requests.post(f'http://{proxy_server}/api/v1/ssh/create', json=data)
+
         return {"instance_id": instance.instance_id}
 
     def unpause_instance(self, request_data, user_email):
