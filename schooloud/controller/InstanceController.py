@@ -3,6 +3,8 @@ from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.controller.DomainController import DomainController
 from schooloud.libs.database import db
+import os
+import requests
 import random
 
 openstack_controller = OpenStackController()
@@ -73,7 +75,17 @@ class InstanceController:
         db.session.commit()
 
         # call proxy api for setting routing rule
-
+        proxy_server = os.environ['PROXY_SERVER']
+        data = {
+            'project_id': project_id,
+            'floating_ip': floating_ip.floating_ip_address,
+            'port': str(port)
+        }
+        ###########################################################
+        print(data)
+        response = requests.post(f'https://{proxy_server}/api/v1/ssh/create', json=data).json()
+        print(response)
+        ###########################################################
         return {"instance_id": instance.instance_id}
 
     def unpause_instance(self, request_data, user_email):
