@@ -2,7 +2,7 @@ import os
 from glob import glob
 from importlib import import_module
 from importlib.util import find_spec as importlib_find
-
+from flask_cors import CORS
 from flask import Flask
 from flask_migrate import Migrate
 
@@ -17,6 +17,9 @@ def create_app():
     app = Flask(__name__)
     phase = os.getenv('SCHOOLOUD_ENV', 'dev/dev').lower()
     app.config.from_pyfile('../config/%s/config.cfg' % phase)
+
+    # CORS
+    CORS(app, supports_credentials=True)
 
     # ORM
     db.init_app(app)

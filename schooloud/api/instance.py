@@ -1,11 +1,13 @@
 from schooloud.blueprints import instance
 from schooloud.controller.InstanceController import InstanceController
+from schooloud.libs.decorator import session_authenticate
 from flask import request
 
 instanceController = InstanceController()
 
 
 @instance.route('/create', methods=['POST'])
+@session_authenticate
 def create_instance():
     params = request.get_json()
     response = instanceController.create_instance(params, request.cookies.get('email'))
@@ -13,6 +15,7 @@ def create_instance():
 
 
 @instance.route('/unpause', methods=['POST'])
+@session_authenticate
 def unpause_instance():
     params = request.get_json()
     response = instanceController.unpause_instance(params, request.cookies.get('email'))
@@ -20,6 +23,7 @@ def unpause_instance():
 
 
 @instance.route('/pause', methods=['POST'])
+@session_authenticate
 def pause_instance():
     params = request.get_json()
     response = instanceController.pause_instance(params, request.cookies.get('email'))
@@ -27,6 +31,7 @@ def pause_instance():
 
 
 @instance.route('/delete', methods=['POST'])
+@session_authenticate
 def delete_instance():
     params = request.get_json()
     response = instanceController.delete_instance(params, request.cookies.get('email'))
@@ -34,6 +39,7 @@ def delete_instance():
 
 
 @instance.route('/reboot', methods=['POST'])
+@session_authenticate
 def reboot_instance():
     params = request.get_json()
     response = instanceController.reboot_instance(params, request.cookies.get('email'))
@@ -41,6 +47,7 @@ def reboot_instance():
 
 
 @instance.route('/list')
+@session_authenticate
 def get_instance_list():
     params = request.get_json()
     response = instanceController.get_instance_list(params, request.cookies.get('email'))
@@ -48,6 +55,7 @@ def get_instance_list():
 
 
 @instance.route('/detail')
+@session_authenticate
 def get_instance_detail():
     params = request.get_json()
     response = instanceController.get_instance_detail(params, request.cookies.get('email'))
