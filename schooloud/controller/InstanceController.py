@@ -3,6 +3,8 @@ from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.controller.DomainController import DomainController
 from schooloud.libs.database import db
+import os
+import requests
 import random
 
 openstack_controller = OpenStackController()
@@ -73,6 +75,13 @@ class InstanceController:
         db.session.commit()
 
         # call proxy api for setting routing rule
+        proxy_server = os.environ['PROXY_SERVER']
+        data = {
+            'project_id': project_id,
+            'floating_ip': floating_ip.floating_ip_address,
+            'port': str(port)
+        }
+        response = requests.post(f'http://{proxy_server}/api/v1/ssh/create', json=data)
 
         return {"instance_id": instance.instance_id}
 
@@ -124,6 +133,14 @@ class InstanceController:
         # return floating ip from openstack
         floating_ip = conn.network.find_available_ip()
         conn.delete_floating_ip(floating_ip)
+
+        # call proxy api to delete routing rule
+        proxy_server = os.environ['PROXY_SERVER']
+        data = {
+            'project_id': project_id,
+            'floating_ip': floating_ip.floating_ip_address
+        }
+        requests.post(f'http://{proxy_server}/api/v1/ssh/delete', json=data)
 
         # if domain exists, delete domain
         instance = Instance.query.filter(Instance.instance_id == instance_id).one()
