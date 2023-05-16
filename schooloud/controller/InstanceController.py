@@ -134,6 +134,14 @@ class InstanceController:
         floating_ip = conn.network.find_available_ip()
         conn.delete_floating_ip(floating_ip)
 
+        # call proxy api to delete routing rule
+        proxy_server = os.environ['PROXY_SERVER']
+        data = {
+            'project_id': project_id,
+            'floating_ip': floating_ip.floating_ip_address
+        }
+        requests.post(f'http://{proxy_server}/api/v1/ssh/delete', json=data)
+
         # if domain exists, delete domain
         instance = Instance.query.filter(Instance.instance_id == instance_id).one()
         if instance.domain_id:
