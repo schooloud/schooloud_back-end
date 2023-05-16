@@ -12,6 +12,8 @@ cd /home/ubuntu/schooloud_back/schooloud
 DIR_HOME=$(pwd)
 export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
 export APP_KEY=OmnoSq4AMDz1g3EB
+export PROXY_SERVER=133.186.134.121
+
 
 #4. install from requirements.txt (~/schooloud_back)
 cd /home/ubuntu/schoooloud_back
@@ -30,6 +32,7 @@ sudo pip install -U flask
 sudo pip install -r ./requirements.txt
 sudo pip install openstackclient
 sudo pip install python-openstackclient
+sudo pip install flask-cors
 
 #5. install uwsgi and nginx (~/schooloud_back)
 sudo apt-get install python3.8-dev

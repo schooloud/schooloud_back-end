@@ -22,16 +22,16 @@ def logout():
 
 
 @user.route('/email-check', methods=['POST'])
-def emailCheck():
+def email_check():
     return userController.check_email(request.get_json())
 
 
 @user.route('/register', methods=['POST'])
 def register():
-    try:
-        return userController.create_user(request.get_json())
-    except:
-        return abort(404)
+    #try:
+    return userController.create_user(request.get_json())
+    #except:
+     #   return abort(404)
 
 
 @user.route('/list')
