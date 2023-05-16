@@ -65,6 +65,7 @@ class ProposalController:
         if is_approved:
             proposal = Proposal.query.filter(Proposal.proposal_id == proposal_id)
             proposal.update({"status": "APPROVED"})
+            db.session.commit()
             author_email = Proposal.query.filter(Proposal.proposal_id == proposal_id).one().author_email
 
             # 프로젝트 생성 함수 호출
