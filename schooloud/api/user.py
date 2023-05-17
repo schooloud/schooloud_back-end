@@ -11,8 +11,12 @@ userController = UserController()
 
 @user.route('/login', methods=['POST'])
 def login():
-    response = make_response()
-    response = userController.authenticate(request.get_json(), response)
+    cookie_data = userController.authenticate(request.get_json())
+    response = make_response(cookie_data)
+
+    # set cookie
+    for key, value in cookie_data.items():
+        response.set_cookie(key, value)
     return response
 
 
