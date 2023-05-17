@@ -16,7 +16,7 @@ def login():
 
     # set cookie
     for key, value in cookie_data.items():
-        response.set_cookie(key, value)
+        response.set_cookie(key, value, domain='.schooloud.cloud')
     return response
 
 
