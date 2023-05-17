@@ -32,18 +32,21 @@ class UserController:
         return user_dict
 
     # 로그인
-    def authenticate(self, params, response):
+    def authenticate(self, params):
         try:
             user = User.query.filter(User.email == params['email']).one()
             if user.password != params['password']:
                 return abort(404)
             else:
                 # Cookie creation
-                response = sessionController.create_session_key(user.email, response)
-                response.set_cookie('email', user.email)
-                response.set_cookie('name', user.name)
-                response.set_cookie('role', user.role)
-                return response
+                cookie_data = sessionController.create_session_key(user.email)
+                cookie_data['email'] = user.email
+                cookie_data['name'] = user.name
+                cookie_data['role'] = user.role
+                # response.set_cookie('email', user.email)
+                # response.set_cookie('name', user.name)
+                # response.set_cookie('role', user.role)
+                return cookie_data
         except NoResultFound:
             return abort(404)
 

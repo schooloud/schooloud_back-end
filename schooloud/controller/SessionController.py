@@ -10,7 +10,7 @@ class SessionController:
     def __init__(self):
         pass
 
-    def create_session_key(self, user_email, response):
+    def create_session_key(self, user_email):
         # if session already exists, delete session
         session = Session.query.filter(Session.user_email == user_email)
         if db.session.query(session.exists()).scalar():
@@ -22,9 +22,13 @@ class SessionController:
         db.session.add(session)
 
         db.session.commit()
-        response.set_cookie('session_key', session.session_key)
-        response.set_cookie('expired_at', datetime.strftime(session.expired_at, "%Y-%m-%d %H:%M:%S"))
-        return response
+        cookie_data = {
+            'session_key': session.session_key,
+            'expired_at': datetime.strftime(session.expired_at, "%Y-%m-%d %H:%M:%S")
+        }
+        # response.set_cookie('session_key', session.session_key)
+        # response.set_cookie('expired_at', datetime.strftime(session.expired_at, "%Y-%m-%d %H:%M:%S"))
+        return cookie_data
 
     def delete_session(self, session_key):
         Session.query.filter(Session.session_key == session_key).delete()
