@@ -12,7 +12,7 @@ userController = UserController()
 @user.route('/login', methods=['POST'])
 def login():
     cookie_data = userController.authenticate(request.get_json())
-    response = make_response(cookie_data)
+    response = make_response()
 
     # set cookie
     for key, value in cookie_data.items():
