@@ -43,9 +43,6 @@ class UserController:
                 cookie_data['email'] = user.email
                 cookie_data['name'] = user.name
                 cookie_data['role'] = user.role
-                # response.set_cookie('email', user.email)
-                # response.set_cookie('name', user.name)
-                # response.set_cookie('role', user.role)
                 return cookie_data
         except NoResultFound:
             return abort(404)
