@@ -26,7 +26,7 @@ def logout():
 
 
 @user.route('/email-check', methods=['POST'])
-def emailCheck():
+def email_check():
     return userController.check_email(request.get_json())
 
 

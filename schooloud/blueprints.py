@@ -16,7 +16,7 @@ keypair = _factory('keypair', '/api/v1/keypair')
 project = _factory('project', '/api/v1/project')
 flavor = _factory('flavor', '/api/v1/flavor')
 instance = _factory('instance', '/api/v1/instance')
+quota = _factory('quota', '/api/v1/quota')
 domain = _factory('domain', '/api/v1/domain')
 
-all_blueprints = (hello, hello_github, proposal, user, keypair, flavor, project, instance, domain)
-
+all_blueprints = (hello, hello_github, proposal, user, keypair, flavor, project, instance, quota, domain)
