@@ -101,9 +101,12 @@ class DomainController:
 
         return {"domain_list": domain_list}
 
-    def delete_domain(self, instance_id):
+    def delete_domain(self, instance_id, project_id):
+        proxy_server = os.environ['PROXY_SERVER']
         app_key = os.environ['APP_KEY']
-        domain_id = Instance.query.filter(Instance.instance_id == instance_id).one().domain_id
+        instance = Instance.query.filter(Instance.instance_id == instance_id).one()
+        domain_id = instance.domain_id
+        domain = instance.domain
 
         # get DNS_zone from NHN cloud
         dns_zone_list = requests.get(
@@ -116,5 +119,12 @@ class DomainController:
             f'?recordsetIdList={domain_id}').json()
         if not response['header']['isSuccessful']:
             return {"message": "ERROR: cannot delete record set successfully"}
+
+        # call proxy api to delete domain
+        data = {
+            'project_id': project_id,
+            'domain': domain + '.schooloud.cloud'
+        }
+        requests.post(f'http://{proxy_server}/api/v1/domain/delete', json=data)
 
         return ''

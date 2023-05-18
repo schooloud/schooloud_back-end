@@ -145,7 +145,7 @@ class InstanceController:
         # if domain exists, delete domain
         instance = Instance.query.filter(Instance.instance_id == instance_id).one()
         if instance.domain_id:
-            response = domain_controller.delete_domain(instance_id)
+            response = domain_controller.delete_domain(instance_id, project_id)
 
         # delete from database
         Instance.query.filter(Instance.instance_id == instance_id).delete()
