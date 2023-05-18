@@ -84,6 +84,8 @@ class ProjectController:
             network_name_or_id=private_net.id,
             subnet_name='private-subnet',
             use_default_subnetpool=True,
+            enable_dhcp=True,
+            dns_nameservers=['8.8.8.8', ]
         )
 
         # Create router to connect between public and private
