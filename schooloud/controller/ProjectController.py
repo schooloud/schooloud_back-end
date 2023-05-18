@@ -10,6 +10,7 @@ from schooloud.model.proposal import Proposal
 from schooloud.model.studentInProject import StudentInProject
 from flask import jsonify, abort
 from schooloud.model.user import User
+from urllib import parse
 
 openstack_controller = OpenStackController()
 
@@ -126,6 +127,9 @@ class ProjectController:
         return student_in_project
 
     def project_list(self, email):
+        ####################################################
+        email = parse.unquote(email)
+        ####################################################
         user_projects = (
             StudentInProject.query.join(Project, StudentInProject.project_id == Project.project_id)
             .add_columns(Project.project_name)
