@@ -18,6 +18,7 @@ class DomainController:
         proxy_server = os.environ['PROXY_SERVER']
         instance_id = request_data['instance_id']
         domain = request_data['domain']
+        project_id = request_data['project_id']
 
         # check if same domain exists
         query = Instance.query.filter(Instance.domain == domain + '.schooloud.cloud.')
@@ -50,6 +51,26 @@ class DomainController:
         instance.domain = domain
         instance.domain_id = domain_id
         db.session.commit()
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # delete instance
+        instance = conn.compute.find_server(instance_id)
+
+        # get instance's floating ip address
+        floating_ip = ''
+        for ip in instance.addresses['private']:
+            if ip['OS-EXT-IPS:type'] == 'floating':
+                floating_ip = ip['addr']
+
+        # call proxy api to add domain
+        data = {
+            'project_id': project_id,
+            'floating_ip': floating_ip,
+            'domain': domain+'.schooloud.cloud'
+        }
+        requests.post(f'http://{proxy_server}/api/v1/domain/create', json=data)
 
         return ''
 
