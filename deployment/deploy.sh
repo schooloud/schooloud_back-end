@@ -11,9 +11,6 @@ export FLASK_APP=schooloud
 cd /home/ubuntu/schooloud_back/schooloud
 DIR_HOME=$(pwd)
 export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
-export APP_KEY=OmnoSq4AMDz1g3EB
-export PROXY_SERVER=133.186.134.121
-
 
 #4. install from requirements.txt (~/schooloud_back)
 cd /home/ubuntu/schoooloud_back
