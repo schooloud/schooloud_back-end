@@ -30,7 +30,7 @@ class DomainController:
                               "recordsetType": "A",
                               "recordsetTtl": 60,
                               "recordList": [{"recordDisabled": False,
-                                              "recordContent": "%s" % proxy_server}]}}
+                                              "recordContent": proxy_server}]}}
 
         # get DNS_zone from NHN cloud
         dns_zone_list = requests.get(
