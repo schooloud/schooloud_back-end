@@ -18,6 +18,7 @@ class DomainController:
         proxy_server = os.environ['PROXY_SERVER']
         instance_id = request_data['instance_id']
         domain = request_data['domain']
+        project_id = request_data['project_id']
 
         # check if same domain exists
         query = Instance.query.filter(Instance.domain == domain + '.schooloud.cloud.')
@@ -44,13 +45,32 @@ class DomainController:
         if not response['header']['isSuccessful']:
             return {"message": "ERROR: cannot create record set successfully"}
         domain_id = response['recordset']['recordsetId']
-        domain = response['recordset']['recordsetName']
 
         # add domain to database
         instance = Instance.query.filter(Instance.instance_id == instance_id).one()
         instance.domain = domain
         instance.domain_id = domain_id
         db.session.commit()
+
+        # openstack connection
+        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
+
+        # delete instance
+        instance = conn.compute.find_server(instance_id)
+
+        # get instance's floating ip address
+        floating_ip = ''
+        for ip in instance.addresses['private']:
+            if ip['OS-EXT-IPS:type'] == 'floating':
+                floating_ip = ip['addr']
+
+        # call proxy api to add domain
+        data = {
+            'project_id': project_id,
+            'floating_ip': floating_ip,
+            'domain': domain+'.schooloud.cloud'
+        }
+        requests.post(f'http://{proxy_server}/api/v1/domain/create', json=data)
 
         return ''
 
@@ -69,7 +89,7 @@ class DomainController:
             project_name = Project.query.filter(Project.project_id == instance.project_id).one().project_name
             instance_id = instance.instance_id
             port = instance.port
-            domain = instance.domain
+            domain = instance.domain+"schooloud.cloud."
             instance_name = conn.compute.find_server(instance_id).name
             domain_list.append({
                 'project_name': project_name,
@@ -81,9 +101,12 @@ class DomainController:
 
         return {"domain_list": domain_list}
 
-    def delete_domain(self, instance_id):
+    def delete_domain(self, instance_id, project_id):
+        proxy_server = os.environ['PROXY_SERVER']
         app_key = os.environ['APP_KEY']
-        domain_id = Instance.query.filter(Instance.instance_id == instance_id).one().domain_id
+        instance = Instance.query.filter(Instance.instance_id == instance_id).one()
+        domain_id = instance.domain_id
+        domain = instance.domain
 
         # get DNS_zone from NHN cloud
         dns_zone_list = requests.get(
@@ -96,5 +119,12 @@ class DomainController:
             f'?recordsetIdList={domain_id}').json()
         if not response['header']['isSuccessful']:
             return {"message": "ERROR: cannot delete record set successfully"}
+
+        # call proxy api to delete domain
+        data = {
+            'project_id': project_id,
+            'domain': domain + '.schooloud.cloud'
+        }
+        requests.post(f'http://{proxy_server}/api/v1/domain/delete', json=data)
 
         return ''
