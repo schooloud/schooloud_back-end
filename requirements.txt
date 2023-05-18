@@ -2,3 +2,4 @@ flask
 flask-migrate
 Flask-Script
 python-openstackclient
+flask-cors

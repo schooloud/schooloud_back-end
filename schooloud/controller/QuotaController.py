@@ -1,9 +1,11 @@
-from flask import jsonify, request
+from flask import jsonify, request, Response
 
 from schooloud.model.quotaRequest import QuotaRequest
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.libs.database import db
+
 openstackController = OpenStackController()
+
 
 class QuotaController:
     def __init__(self):
@@ -49,8 +51,8 @@ class QuotaController:
         # Get User count
         user_count = len(conn.list_users())
         return jsonify({
-            "memory_usage": memory_usage/1024,
-            "memory_limit": memory_limit/1024,
+            "memory_usage": memory_usage / 1024,
+            "memory_limit": memory_limit / 1024,
             "cpu_usage": cpu_usage,
             "cpu_limit": cpu_limit,
             "storage_usage": storage_usage,
@@ -78,7 +80,7 @@ class QuotaController:
         db.session.add(quota_request)
         db.session.commit()
 
-        return 200
+        return Response(status=200)
 
     def update_quota_request_state(self, params):
         quota_request_id = params['quota_request_id']
@@ -86,11 +88,12 @@ class QuotaController:
         quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id)
 
         if is_approved:
-            quota_request.update({"status":"APPROVED"})
+            quota_request.update({"status": "APPROVED"})
             quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id).one()
             # Set quota changes
             conn = openstackController.create_admin_connection()
-            conn.set_compute_quotas(name_or_id=quota_request.project_id, cores=quota_request.cpu, ram=quota_request.memory*1024)
+            conn.set_compute_quotas(name_or_id=quota_request.project_id, cores=quota_request.cpu,
+                                    ram=quota_request.memory * 1024)
             conn.set_volume_quotas(name_or_id=quota_request.project_id, gigabytes=quota_request.storage)
 
             db.session.commit()
@@ -101,7 +104,7 @@ class QuotaController:
             })
 
         else:
-            quota_request.update({"status":"REJECTED"})
+            quota_request.update({"status": "REJECTED"})
             db.session.commit()
 
             return jsonify({
@@ -125,5 +128,5 @@ class QuotaController:
         })
 
     def get_quota_request(self, quota_request_id):
-        quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id)
+        quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id).one()
         return jsonify(quota_request.as_dict())
