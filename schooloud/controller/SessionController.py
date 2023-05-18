@@ -26,8 +26,6 @@ class SessionController:
             'session_key': session.session_key,
             'expired_at': datetime.strftime(session.expired_at, "%Y-%m-%d %H:%M:%S")
         }
-        # response.set_cookie('session_key', session.session_key)
-        # response.set_cookie('expired_at', datetime.strftime(session.expired_at, "%Y-%m-%d %H:%M:%S"))
         return cookie_data
 
     def delete_session(self, session_key):

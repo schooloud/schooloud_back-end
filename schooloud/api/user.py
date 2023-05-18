@@ -15,8 +15,9 @@ def login():
     response = make_response()
 
     # set cookie
+    expired_at = cookie_data['expired_at']
     for key, value in cookie_data.items():
-        response.set_cookie(key, value, domain='.schooloud.cloud')
+        response.set_cookie(key, value, domain='.schooloud.cloud', expires=expired_at)
     return response
 
 
