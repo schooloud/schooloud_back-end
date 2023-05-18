@@ -28,10 +28,10 @@ def email_check():
 
 @user.route('/register', methods=['POST'])
 def register():
-    #try:
-    return userController.create_user(request.get_json())
-    #except:
-     #   return abort(404)
+    try:
+        return userController.create_user(request.get_json())
+    except:
+        return abort(404)
 
 
 @user.route('/list')
