@@ -29,7 +29,7 @@ class DomainController:
                               "recordsetType": "A",
                               "recordsetTtl": 60,
                               "recordList": [{"recordDisabled": False,
-                                              "recordContent": proxy_server}]}}
+                                              "recordContent": "%s" % proxy_server}]}}
 
         # get DNS_zone from NHN cloud
         dns_zone_list = requests.get(
@@ -44,7 +44,6 @@ class DomainController:
         if not response['header']['isSuccessful']:
             return {"message": "ERROR: cannot create record set successfully"}
         domain_id = response['recordset']['recordsetId']
-        domain = response['recordset']['recordsetName']
 
         # add domain to database
         instance = Instance.query.filter(Instance.instance_id == instance_id).one()
@@ -69,7 +68,7 @@ class DomainController:
             project_name = Project.query.filter(Project.project_id == instance.project_id).one().project_name
             instance_id = instance.instance_id
             port = instance.port
-            domain = instance.domain
+            domain = instance.domain+"schooloud.cloud."
             instance_name = conn.compute.find_server(instance_id).name
             domain_list.append({
                 'project_name': project_name,
