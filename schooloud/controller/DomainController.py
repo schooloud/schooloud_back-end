@@ -15,7 +15,7 @@ class DomainController:
 
     def assign_domain(self, request_data, user_email):
         app_key = os.environ['APP_KEY']
-        project_id = request_data['project_id']
+        proxy_server = os.environ['PROXY_SERVER']
         instance_id = request_data['instance_id']
         domain = request_data['domain']
 
@@ -24,24 +24,12 @@ class DomainController:
         if db.session.query(query.exists()).scalar():
             return {"message": "ERROR: The same domain already exists"}
 
-        # openstack connection
-        conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
-
-        # get instance floating_ip
-        floating_ip = ''
-        instance = conn.compute.find_server(instance_id)
-        for ip in instance['addresses']['private']:
-            if ip['OS-EXT-IPS:type'] == 'floating':
-                floating_ip = ip['addr']
-        if floating_ip == '':
-            return {"message": "ERROR: instance doesn't have floating ip"}
-
         # create record set
         data = {"recordset": {"recordsetName": domain + ".schooloud.cloud.",
                               "recordsetType": "A",
                               "recordsetTtl": 60,
                               "recordList": [{"recordDisabled": False,
-                                              "recordContent": floating_ip}]}}
+                                              "recordContent": proxy_server}]}}
 
         # get DNS_zone from NHN cloud
         dns_zone_list = requests.get(
