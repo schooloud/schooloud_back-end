@@ -13,7 +13,7 @@ def create_keypair(**kwargs):
     return keypairController.create_keypair(request.get_json(), kwargs['email'])
 
 
-@keypair.route('/list', methods=['POST'])
+@keypair.route('/list')
 @session_authenticate
 def keypair_list(**kwargs):
     return keypairController.keypair_list(kwargs['email'])
