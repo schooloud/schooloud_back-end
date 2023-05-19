@@ -2,7 +2,7 @@ from sqlalchemy.exc import NoResultFound
 
 from schooloud.blueprints import proposal
 from schooloud.controller.ProposalController import ProposalController
-from flask import request
+from flask import request, abort, Response, jsonify
 
 from schooloud.libs.decorator import session_authenticate
 
@@ -26,15 +26,11 @@ def get_proposal_detail(proposal_id, **kwargs):
 @session_authenticate
 def create_proposal(**kwargs):
     params = request.get_json()
-    response = ''
-    response_code = 200
     try:
-        proposal_id = proposalController.set_proposal(params)
-        response = str(proposal_id)
+        project_id = proposalController.set_proposal(params)
+        return Response({"project_id": str(project_id)}, status=200, mimetype='application/json')
     except Exception:
-        pass
-
-    return response
+        return abort(404)
 
 
 @proposal.route('/delete', methods=['POST'])

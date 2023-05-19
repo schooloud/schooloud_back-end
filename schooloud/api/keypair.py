@@ -1,6 +1,6 @@
 from schooloud.blueprints import keypair
 from schooloud.controller.KeypairController import KeypairController
-from flask import request, abort
+from flask import request, abort, Response
 
 from schooloud.libs.decorator import session_authenticate
 
@@ -10,8 +10,11 @@ keypairController = KeypairController()
 @keypair.route('/create', methods=['POST'])
 @session_authenticate
 def create_keypair(**kwargs):
-    return keypairController.create_keypair(request.get_json(), kwargs['email'])
-
+    try:
+        keypair = keypairController.create_keypair(request.get_json(), kwargs['email'])
+        return Response(keypair, status=200, mimetype='application/json')
+    except:
+        return abort(404)
 
 @keypair.route('/list')
 @session_authenticate
