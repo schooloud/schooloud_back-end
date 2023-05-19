@@ -15,7 +15,7 @@ class FlavorController:
             else:
                 return str(ram) + 'MB'
 
-        conn = openstack_controller.create_connection(user_email)
+        conn = openstack_controller.create_admin_connection()
         flavors = []
         for flavor in conn.compute.flavors():
             f = {'id': flavor['id'],
