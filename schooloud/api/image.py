@@ -12,6 +12,6 @@ imageController = ImageController()
 def image_list(**kwargs):
     try:
         images = imageController.get_image_list(kwargs['email'])
-        return Response(images, status=200, mimetype='application/json')
+        return images
     except:
         return abort(404)
