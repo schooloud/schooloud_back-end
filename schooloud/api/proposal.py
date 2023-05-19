@@ -11,7 +11,7 @@ proposalController = ProposalController()
 
 @proposal.route('/detail/<proposal_id>')
 @session_authenticate
-def get_proposal_detail(proposal_id):
+def get_proposal_detail(proposal_id, **kwargs):
     response = ''
     response_code = 200
     try:
@@ -24,7 +24,7 @@ def get_proposal_detail(proposal_id):
 
 @proposal.route('/create', methods=['POST'])
 @session_authenticate
-def create_proposal():
+def create_proposal(**kwargs):
     params = request.get_json()
     response = ''
     response_code = 200
@@ -39,11 +39,11 @@ def create_proposal():
 
 @proposal.route('/delete', methods=['POST'])
 @session_authenticate
-def delete_proposal():
+def delete_proposal(**kwargs):
     params = request.get_json()
     response = ''
     try:
-        response = proposalController.delete_proposal(params, request.cookies.get('email'))
+        response = proposalController.delete_proposal(params, kwargs['email'])
     except Exception:
         pass
 
@@ -52,12 +52,12 @@ def delete_proposal():
 
 @proposal.route('/list')
 @session_authenticate
-def get_proposal_list():
+def get_proposal_list(**kwargs):
     params = request.get_json()
     response = ''
     response_code = 200
     try:
-        proposal_list = proposalController.get_proposal_list(params, request.cookies.get('email'))
+        proposal_list = proposalController.get_proposal_list(params, kwargs['email'])
         response = {"proposals": proposal_list}
     except Exception:
         pass
@@ -67,7 +67,7 @@ def get_proposal_list():
 
 @proposal.route('/approve', methods=['POST'])
 @session_authenticate
-def approve_proposal():
+def approve_proposal(**kwargs):
     params = request.get_json()
     response = ''
     response_code = 200

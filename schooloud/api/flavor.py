@@ -8,6 +8,6 @@ flavorController = FlavorController()
 
 @flavor.route('/list')
 @session_authenticate
-def get_flavor_list():
-    response = flavorController.get_flavor_list(request.cookies.get('email'))
+def get_flavor_list(**kwargs):
+    response = flavorController.get_flavor_list(kwargs['email'])
     return response

@@ -8,15 +8,15 @@ domainController = DomainController()
 
 @domain.route('/assign', methods=['POST'])
 @session_authenticate
-def assign_domain():
+def assign_domain(**kwargs):
     params = request.get_json()
-    response = domainController.assign_domain(params, request.cookies.get('email'))
+    response = domainController.assign_domain(params, kwargs['email'])
     return response
 
 
 @domain.route('/list')
 @session_authenticate
-def get_domain_list():
-    response = domainController.get_domain_list(request.cookies.get('email'))
+def get_domain_list(**kwargs):
+    response = domainController.get_domain_list(kwargs['email'])
     return response
 
