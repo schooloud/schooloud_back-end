@@ -18,5 +18,6 @@ flavor = _factory('flavor', '/api/v1/flavor')
 instance = _factory('instance', '/api/v1/instance')
 quota = _factory('quota', '/api/v1/quota')
 domain = _factory('domain', '/api/v1/domain')
+image = _factory('image', '/api/v1/image')
 
-all_blueprints = (hello, hello_github, proposal, user, keypair, flavor, project, instance, quota, domain)
+all_blueprints = (hello, hello_github, proposal, user, keypair, flavor, project, instance, quota, domain, image)
