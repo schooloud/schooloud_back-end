@@ -26,7 +26,7 @@ class OpenStackController:
         # Find user and project for connection
         user = User.query.filter(User.email == email).one()
         project = Project.query.filter(Project.project_id == StudentInProject.query.filter(
-            StudentInProject.student_email == email).one().project_id).all()[0]
+            StudentInProject.student_email == email).all()[0].project_id).one()
         # return connection
         return openstack.connect(
             auth_url="http://211.37.146.151/identity",
