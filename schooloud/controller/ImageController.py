@@ -18,7 +18,7 @@ class ImageController:
                 {
                     "id": image.id,
                     "image_name": image.name,
-                    "min_disk": image.min_disk,
+                    "size": str(round(image.size/(1024*1024), 2))+" MB",
                     "description": image.name
                 }
             )
