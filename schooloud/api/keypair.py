@@ -12,7 +12,7 @@ keypairController = KeypairController()
 def create_keypair(**kwargs):
     try:
         keypair = keypairController.create_keypair(request.get_json(), kwargs['email'])
-        return Response(keypair, status=200, mimetype='application/json')
+        return keypair
     except:
         return abort(404)
 
