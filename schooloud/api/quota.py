@@ -22,7 +22,8 @@ def approve_request(**kwargs):
 
 @quota.route('/list')
 def get_quota_request_list(**kwargs):
-    return quotaController.get_quota_request_list(request.cookies.get('role'), kwargs['email'])
+    return quotaController.get_quota_request_list(kwargs['role'], kwargs['email'])
+
 
 @quota.route('/detail/<quota_request_id>')
 def get_quota_request_detail(quota_request_id, **kwargs):
