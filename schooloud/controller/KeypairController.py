@@ -29,3 +29,7 @@ class KeypairController:
             })
 
         return jsonify({"key_list": key_list})
+
+    def delete_keypair(self, params, email):
+        conn = openstack_controller.create_connection(email)
+        conn.delete_keypair(params["keypair_name"])
