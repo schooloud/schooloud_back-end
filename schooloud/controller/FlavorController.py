@@ -25,4 +25,4 @@ class FlavorController:
                  'cpu': str(flavor['vcpus'])
                  }
             flavors.append(f)
-        return {"flavors": flavors}
+        return {"flavors": flavors[0:8]}
