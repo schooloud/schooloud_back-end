@@ -87,6 +87,8 @@ class QuotaController:
         is_approved = params['approval']
         quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id)
 
+
+
         if is_approved:
             quota_request.update({"status": "APPROVED"})
             quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id).one()
