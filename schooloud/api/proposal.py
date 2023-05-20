@@ -27,8 +27,8 @@ def get_proposal_detail(proposal_id, **kwargs):
 def create_proposal(**kwargs):
     params = request.get_json()
     try:
-        project_id = proposalController.set_proposal(params)
-        return Response({"project_id": str(project_id)}, status=200, mimetype='application/json')
+        proposal_id = proposalController.set_proposal(params)
+        return str(proposal_id)
     except Exception:
         return abort(404)
 

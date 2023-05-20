@@ -1,4 +1,5 @@
 import datetime
+import math
 
 from sqlalchemy.exc import NoResultFound
 from schooloud.libs.database import db
@@ -86,7 +87,8 @@ class ProjectController:
             subnet_name='private-subnet',
             use_default_subnetpool=True,
             enable_dhcp=True,
-            dns_nameservers=['8.8.8.8', ]
+            dns_nameservers=['8.8.8.8', ],
+            prefixlen=32-math.ceil(math.log(proposal.instance_num, 2))
         )
 
         # Create router to connect between public and private
