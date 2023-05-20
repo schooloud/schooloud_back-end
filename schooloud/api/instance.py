@@ -46,17 +46,15 @@ def reboot_instance(**kwargs):
     return response
 
 
-@instance.route('/list')
+@instance.route('/list/<project_id>')
 @session_authenticate
-def get_instance_list(**kwargs):
-    params = request.get_json()
-    response = instanceController.get_instance_list(params, kwargs['email'])
+def get_instance_list(project_id, **kwargs):
+    response = instanceController.get_instance_list(project_id, kwargs['email'])
     return response
 
 
-@instance.route('/detail')
+@instance.route('/detail/<project_id>/<instance_id>')
 @session_authenticate
-def get_instance_detail(**kwargs):
-    params = request.get_json()
-    response = instanceController.get_instance_detail(params, kwargs['email'])
+def get_instance_detail(project_id, instance_id, **kwargs):
+    response = instanceController.get_instance_detail(project_id, instance_id, kwargs['email'])
     return response

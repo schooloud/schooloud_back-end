@@ -171,9 +171,7 @@ class InstanceController:
 
         return {"message": "successfully rebooted"}
 
-    def get_instance_list(self, request_data, user_email):
-        project_id = request_data['project_id']
-
+    def get_instance_list(self, project_id, user_email):
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
@@ -202,10 +200,7 @@ class InstanceController:
 
         return {"instance_list": instance_list}
 
-    def get_instance_detail(self, request_data, user_email):
-        project_id = request_data['project_id']
-        instance_id = request_data['instance_id']
-
+    def get_instance_detail(self, project_id, instance_id, user_email):
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
