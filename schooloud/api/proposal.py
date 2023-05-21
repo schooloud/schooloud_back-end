@@ -49,11 +49,9 @@ def delete_proposal(**kwargs):
 @proposal.route('/list')
 @session_authenticate
 def get_proposal_list(**kwargs):
-    params = request.get_json()
     response = ''
-    response_code = 200
     try:
-        proposal_list = proposalController.get_proposal_list(params, kwargs['email'])
+        proposal_list = proposalController.get_proposal_list(kwargs['email'])
         response = {"proposals": proposal_list}
     except Exception:
         pass
