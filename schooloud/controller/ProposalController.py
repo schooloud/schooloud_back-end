@@ -44,7 +44,7 @@ class ProposalController:
 
         return ''
 
-    def get_proposal_list(self, request_data, user_email):
+    def get_proposal_list(self, user_email):
         proposal_list = []
 
         user = User.query.filter(User.email == user_email).one()
