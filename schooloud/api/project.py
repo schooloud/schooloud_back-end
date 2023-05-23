@@ -30,10 +30,10 @@ def add_member_to_project(**kwargs):
 @project.route('/list')
 @session_authenticate
 def project_list(**kwargs):
-    try:
-        return projectController.project_list(kwargs['email'])
-    except:
-        return abort(404)
+    # try:
+    return projectController.project_list(kwargs['email'], kwargs['role'])
+    # except:
+    #     return abort(404)
 
 
 @project.route('/detail/<project_id>')

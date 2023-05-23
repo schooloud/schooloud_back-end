@@ -1,6 +1,7 @@
 import datetime
 import math
 
+from sqlalchemy import desc, asc
 from sqlalchemy.exc import NoResultFound
 from schooloud.libs.database import db
 
@@ -128,21 +129,43 @@ class ProjectController:
         db.session.commit()
         return student_in_project
 
-    def project_list(self, email):
-        user_projects = (
-            StudentInProject.query.join(Project, StudentInProject.project_id == Project.project_id)
-            .add_columns(Project.project_name)
-            .filter(StudentInProject.student_email == email)
-            .all()
-        )
+    def project_list(self, email, role):
+        ####### 출력부 리팩토링 필요 #######
         projects = []
-        for project in user_projects:
-            projects.append(
-                {
-                    "project_id": project[0].project_id,
-                    "project_name": project.project_name
-                }
+        # Case #1 : Student project list
+        if role == 'STUDENT':
+            user_projects = (
+                StudentInProject.query.join(Project, StudentInProject.project_id == Project.project_id)
+                .add_columns(Project.project_name, Project.create_at)
+                .filter(StudentInProject.student_email == email).order_by(asc(Project.create_at))
+                .all()
             )
+            for project in user_projects:
+                projects.append(
+                    {
+                        "project_id": project[0].project_id,
+                        "project_name": project.project_name
+                    }
+                )
+        # Case #2 : Admin or Professor project list
+        elif role == 'ADMIN' or role == 'PROFESSOR':
+            user_projects = Project.query.order_by(asc(Project.create_at)).all()
+            for project in user_projects:
+                projects.append(
+                    {
+                        "project_id": project.project_id,
+                        "project_name": project.project_name
+                    }
+                )
+        else:
+            user_projects = []
+            for project in user_projects:
+                projects.append(
+                    {
+                        "project_id": project[0].project_id,
+                        "project_name": project.project_name
+                    }
+                )
         return jsonify({"projects": projects})
 
     def project_detail(self, project_id, email, role):

@@ -20,7 +20,7 @@ def create_app():
 
     # CORS
     cors = CORS(app, resources={r"/*": {
-        "origins": "['http://localhost:3000', 'http://dev.schooloud.cloud', '*.schooloud.cloud']",
+        "origins": "['http://localhost:3000', 'localhost', 'http://dev.schooloud.cloud', '*.schooloud.cloud']",
         "allow_headers": "*",
         "expose_headers": "*"}}, supports_credentials=True)
 

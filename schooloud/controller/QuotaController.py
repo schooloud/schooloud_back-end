@@ -80,7 +80,7 @@ class QuotaController:
         db.session.add(quota_request)
         db.session.commit()
 
-        return Response(status=200)
+        return jsonify({"message": "request sending complete"})
 
     def update_quota_request_state(self, params):
         quota_request_id = params['quota_request_id']

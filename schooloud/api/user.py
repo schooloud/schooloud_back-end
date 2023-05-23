@@ -42,5 +42,5 @@ def register():
 
 @user.route('/list')
 @session_authenticate
-def list():
+def list(**kwargs):
     return userController.get_user_list()
