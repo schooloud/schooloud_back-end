@@ -25,6 +25,6 @@ def delete_domain(**kwargs):
 @domain.route('/list')
 @session_authenticate
 def get_domain_list(**kwargs):
-    response = domainController.get_domain_list(kwargs['email'])
+    response = domainController.get_domain_list(kwargs['role'])
     return response
 
