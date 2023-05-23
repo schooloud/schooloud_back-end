@@ -172,6 +172,8 @@ class InstanceController:
         return {"message": "successfully rebooted"}
 
     def get_instance_list(self, project_id, user_email):
+        proxy_server = os.environ['PROXY_SERVER']
+
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
@@ -185,12 +187,15 @@ class InstanceController:
                 "flavor": server.flavor['original_name'],
                 "keypair_name": server.key_name,
                 "status": server.status,
-                "ip_addresses": []
+                "ip_addresses": [],
+                "port": Instance.query.filter(Instance.instance_id == server.id).one().port
             }
 
             # get instance's ip address
             for ip in server.addresses['private']:
-                instance['ip_addresses'].append(ip['addr'])
+                if ip['OS-EXT-IPS:type'] == 'fixed':
+                    instance['ip_addresses'].append(ip['addr'])
+            instance['ip_addresses'].append(proxy_server)
 
             # get instance domain
             domain = Instance.query.filter(Instance.instance_id == server.id).one().domain
@@ -201,6 +206,8 @@ class InstanceController:
         return {"instance_list": instance_list}
 
     def get_instance_detail(self, project_id, instance_id, user_email):
+        proxy_server = os.environ['PROXY_SERVER']
+
         # openstack connection
         conn = openstack_controller.create_connection_with_project_id(user_email, project_id)
 
@@ -214,12 +221,15 @@ class InstanceController:
             "flavor": instance.flavor['original_name'],
             "keypair_name": instance.key_name,
             "status": instance.status,
-            "ip_addresses": []
+            "ip_addresses": [],
+            "port": Instance.query.filter(Instance.instance_id == instance.id).one().port
         }
 
         # get instance's ip address
         for ip in instance.addresses['private']:
-            response['ip_addresses'].append(ip['addr'])
+            if ip['OS-EXT-IPS:type'] == 'fixed':
+                response['ip_addresses'].append(ip['addr'])
+        response['ip_addresses'].append(proxy_server)
 
         # get instance domain
         domain = Instance.query.filter(Instance.instance_id == instance_id).one().domain
