@@ -9,10 +9,11 @@ class OpenStackController:
         pass
 
     def create_admin_connection(self):
+        admin = User.query.filter(User.email == 'admin').one()
         return openstack.connect(
             auth_url="http://211.37.146.151/identity",
-            username="admin",
-            password="vp2smsehsRktmfh!!",
+            username=admin.email,
+            password=admin.password,
             project_id="008f771ca9564acaae66fc110e964f75",
             project_name="admin",
             user_domain_name="Default",

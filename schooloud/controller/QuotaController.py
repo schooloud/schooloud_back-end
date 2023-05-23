@@ -1,6 +1,7 @@
 from flask import jsonify, request, Response
 
 from schooloud.model.quotaRequest import QuotaRequest
+from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.libs.database import db
 
@@ -25,31 +26,37 @@ class QuotaController:
         }
         return quota_request_dict
 
-    def current_usage(self):
-        # Get all projects quota
-        conn = openstackController.create_admin_connection()
-        all_projects = conn.list_projects()
+    def current_usage(self, params, email, role):
+        # Quota values
         cpu_limit = 0
         memory_limit = 0
         storage_limit = 0
-        for project in all_projects:
-            compute_quota = conn.get_compute_quotas(name_or_id=project.id)
-            volume_quota = conn.get_volume_quotas(name_or_id=project.id)
-            cpu_limit += compute_quota.cores
-            memory_limit += compute_quota.ram
-            storage_limit += volume_quota.gigabytes
-        # Get all instances usage
-        all_instances = conn.compute.servers(all_projects=True)
+        # Instance usage values
         cpu_usage = 0
         memory_usage = 0
         storage_usage = 0
-        for instance in all_instances:
-            cpu_usage += instance.flavor.vcpus
-            memory_usage += instance.flavor.ram
-            storage_usage += instance.flavor.disk
+        # User count initial value
+        user_count = 0
+        # Case #1 : Admin Get all projects quota
+        if role == 'ADMIN' or role == 'PROFESSOR':
+            # Get all quotas
+            conn = openstackController.create_admin_connection()
+            all_projects = conn.list_projects()
+            for project in all_projects:
+                compute_quota = conn.get_compute_quotas(name_or_id=project.id)
+                volume_quota = conn.get_volume_quotas(name_or_id=project.id)
+                cpu_limit += compute_quota.cores
+                memory_limit += compute_quota.ram
+                storage_limit += volume_quota.gigabytes
+            # Get all instances usage
+            all_instances = conn.compute.servers(all_projects=True)
+            for instance in all_instances:
+                cpu_usage += instance.flavor.vcpus
+                memory_usage += instance.flavor.ram
+                storage_usage += instance.flavor.disk
+            # Get User count
+            user_count = len(conn.list_users())
 
-        # Get User count
-        user_count = len(conn.list_users())
         return jsonify({
             "memory_usage": memory_usage / 1024,
             "memory_limit": memory_limit / 1024,
@@ -82,7 +89,11 @@ class QuotaController:
 
         return jsonify({"message": "request sending complete"})
 
-    def update_quota_request_state(self, params):
+    def update_quota_request_state(self, params, role):
+        if role == 'STUDENT':
+            return {
+                "message": "invalid access"
+            }
         quota_request_id = params['quota_request_id']
         is_approved = params['approval']
         quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id)
@@ -90,11 +101,19 @@ class QuotaController:
         if is_approved:
             quota_request.update({"status": "APPROVED"})
             quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id).one()
+            project_id = quota_request.project_id
+            cpu = quota_request.cpu
+            memory = quota_request.memory
+            storage = quota_request.storage
             # Set quota changes
             conn = openstackController.create_admin_connection()
-            conn.set_compute_quotas(name_or_id=quota_request.project_id, cores=quota_request.cpu,
-                                    ram=quota_request.memory * 1024)
-            conn.set_volume_quotas(name_or_id=quota_request.project_id, gigabytes=quota_request.storage)
+            conn.set_compute_quotas(name_or_id=project_id, cores=cpu,
+                                    ram=memory * 1024)
+            conn.set_volume_quotas(name_or_id=project_id, gigabytes=storage)
+
+            # Update project information
+            project = Project.query.filter(Project.project_id == project_id)
+            project.update({'cpu': cpu, 'memory': memory, 'storage': storage})
 
             db.session.commit()
 
