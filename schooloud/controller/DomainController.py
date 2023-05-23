@@ -89,7 +89,9 @@ class DomainController:
             project_name = Project.query.filter(Project.project_id == instance.project_id).one().project_name
             instance_id = instance.instance_id
             port = instance.port
-            domain = instance.domain+"schooloud.cloud."
+            domain = instance.domain
+            if domain is not None:
+                domain = instance.domain+".schooloud.cloud."
             instance_name = conn.compute.find_server(instance_id).name
             domain_list.append({
                 'project_name': project_name,
@@ -126,5 +128,10 @@ class DomainController:
             'domain': domain + '.schooloud.cloud'
         }
         requests.post(f'http://{proxy_server}/api/v1/domain/delete', json=data)
+
+        # update domain from instance
+        instance.domain = None
+        instance.domain_id = None
+        db.session.commit()
 
         return ''
