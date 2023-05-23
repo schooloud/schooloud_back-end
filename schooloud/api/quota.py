@@ -10,7 +10,7 @@ quotaController = QuotaController()
 @quota.route('/usage')
 @session_authenticate
 def get_usage(**kwargs):
-    return quotaController.current_usage(request.get_json(), kwargs['email'], kwargs['role'])
+    return quotaController.current_usage(kwargs['role'])
 
 
 @quota.route('/request', methods=['POST'])
