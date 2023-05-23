@@ -159,13 +159,7 @@ class ProjectController:
                 )
         else:
             user_projects = []
-            for project in user_projects:
-                projects.append(
-                    {
-                        "project_id": project[0].project_id,
-                        "project_name": project.project_name
-                    }
-                )
+        
         return jsonify({"projects": projects})
 
     def project_detail(self, project_id, email, role):
