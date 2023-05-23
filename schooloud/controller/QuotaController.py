@@ -1,6 +1,7 @@
 from flask import jsonify, request, Response
 
 from schooloud.model.quotaRequest import QuotaRequest
+from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.libs.database import db
 
@@ -55,24 +56,6 @@ class QuotaController:
                 storage_usage += instance.flavor.disk
             # Get User count
             user_count = len(conn.list_users())
-        #2 Case #2 : User Get selected project quota
-        else:
-            # Get quota of a selected project
-            project_id = params['project_id']
-            conn = openstackController.create_connection_with_project_id(email, project_id)
-
-            compute_quota = conn.get_compute_quotas(name_or_id=project_id)
-            volume_quota = conn.get_volume_quotas(name_or_id=project_id)
-            cpu_limit = compute_quota.cores
-            memory_limit = compute_quota.ram
-            storage_limit = volume_quota.gigabytes
-
-            # Get all instances usage
-            instances = conn.list_servers()
-            for instance in instances:
-                cpu_usage += instance.flavor.vcpus
-                memory_usage += instance.flavor.ram
-                storage_usage += instance.flavor.disk
 
         return jsonify({
             "memory_usage": memory_usage / 1024,
@@ -106,7 +89,11 @@ class QuotaController:
 
         return jsonify({"message": "request sending complete"})
 
-    def update_quota_request_state(self, params):
+    def update_quota_request_state(self, params, role):
+        if role == 'STUDENT':
+            return {
+                "message": "invalid access"
+            }
         quota_request_id = params['quota_request_id']
         is_approved = params['approval']
         quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id)
@@ -114,13 +101,19 @@ class QuotaController:
         if is_approved:
             quota_request.update({"status": "APPROVED"})
             quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id).one()
+            project_id = quota_request.project_id
+            cpu = quota_request.cpu
+            memory = quota_request.memory
+            storage = quota_request.storage
             # Set quota changes
             conn = openstackController.create_admin_connection()
-            conn.set_compute_quotas(name_or_id=quota_request.project_id, cores=quota_request.cpu,
-                                    ram=quota_request.memory * 1024)
-            conn.set_volume_quotas(name_or_id=quota_request.project_id, gigabytes=quota_request.storage)
+            conn.set_compute_quotas(name_or_id=project_id, cores=cpu,
+                                    ram=memory * 1024)
+            conn.set_volume_quotas(name_or_id=project_id, gigabytes=storage)
 
-            # project table 내 quota 수정 필요
+            # Update project information
+            project = Project.query.filter(Project.project_id == project_id)
+            project.update({'cpu': cpu, 'memory': memory, 'storage': storage})
 
             db.session.commit()
 
