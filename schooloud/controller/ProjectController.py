@@ -164,54 +164,83 @@ class ProjectController:
 
     def project_detail(self, project_id, email, role):
         # project에 연결된 email 이거나, role이 admin인 경우에만 동작
-        try:
-            # Get Project
-            if role == "ADMIN":
-                project = (
-                    StudentInProject.query.filter(StudentInProject.project_id == project_id)
-                    .join(Project, StudentInProject.project_id == Project.project_id)
-                    .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
-                                 Project.end_at)
-                    .one()
-                )
-            else:
-                project = (
-                    StudentInProject.query.filter(StudentInProject.student_email == email)
-                    .filter(StudentInProject.project_id == project_id)
-                    .join(Project, StudentInProject.project_id == Project.project_id)
-                    .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
-                                 Project.end_at)
-                    .one()
-                )
-            # Get current instance number on openstack
-            conn = openstack_controller.create_connection_with_project_id(email, project_id)
-            instance_num = len(conn.list_servers())
-            # Get members
-            students = (
+        # Get Project
+        if role == "ADMIN":
+            project = (
                 StudentInProject.query.filter(StudentInProject.project_id == project_id)
-                .join(User, StudentInProject.student_email == User.email)
-                .add_columns(User.name)
-                .all()
+                .join(Project, StudentInProject.project_id == Project.project_id)
+                .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
+                             Project.end_at)
+                .one()
             )
-            members = []
+            conn = openstack_controller.create_admin_connection()
+            # instances = conn.list_servers(filters={"tenant_id": project_id})
+            instance_list = conn.list_servers(all_projects=True)
+            instances = []
+            for instance in instance_list:
+                if instance.location['project']['id'] == project_id:
+                    instances.append(instance)
+        else:
+            project = (
+                StudentInProject.query.filter(StudentInProject.student_email == email)
+                .filter(StudentInProject.project_id == project_id)
+                .join(Project, StudentInProject.project_id == Project.project_id)
+                .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
+                             Project.end_at)
+                .one()
+            )
+            conn = openstack_controller.create_connection_with_project_id(email, project_id)
+            instances = conn.list_servers()
 
-            for student in students:
-                members.append(
-                    {
-                        "name": student.name,
-                        "email": student[0].student_email
-                    }
-                )
-        except NoResultFound:
-            return abort(400)
+        # Get quota of a selected project
+        compute_quota = conn.get_compute_quotas(name_or_id=project_id)
+        volume_quota = conn.get_volume_quotas(name_or_id=project_id)
+        cpu_limit = compute_quota.cores
+        memory_limit = compute_quota.ram
+        storage_limit = volume_quota.gigabytes
+        cpu_usage = 0
+        memory_usage = 0
+        storage_usage = 0
+
+        # Get all instances usage
+        for instance in instances:
+            cpu_usage += instance.flavor.vcpus
+            memory_usage += instance.flavor.ram
+            storage_usage += instance.flavor.disk
+
+        # Get current instance number on openstack
+        instance_num = len(instances)
+
+        # Get members
+        students = (
+            StudentInProject.query.filter(StudentInProject.project_id == project_id)
+            .join(User, StudentInProject.student_email == User.email)
+            .add_columns(User.name)
+            .all()
+        )
+        members = []
+
+        for student in students:
+            members.append(
+                {
+                    "name": student.name,
+                    "email": student[0].student_email
+                }
+            )
 
         return jsonify({
             "name": project.project_name,
             "create_at": project.create_at,
             "instance_num": instance_num,
-            "cpu": project.cpu,
-            "memory": project.memory,
-            "storage": project.storage,
+            # "cpu": project.cpu,
+            # "memory": project.memory,
+            # "storage": project.storage,
             "end_at": project.end_at,
-            "members": members
+            "members": members,
+            "memory_usage": memory_usage / 1024,
+            "memory_limit": memory_limit / 1024,
+            "cpu_usage": cpu_usage,
+            "cpu_limit": cpu_limit,
+            "storage_usage": storage_usage,
+            "storage_limit": storage_limit
         })

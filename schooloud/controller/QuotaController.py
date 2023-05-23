@@ -25,31 +25,55 @@ class QuotaController:
         }
         return quota_request_dict
 
-    def current_usage(self):
-        # Get all projects quota
-        conn = openstackController.create_admin_connection()
-        all_projects = conn.list_projects()
+    def current_usage(self, params, email, role):
+        # Quota values
         cpu_limit = 0
         memory_limit = 0
         storage_limit = 0
-        for project in all_projects:
-            compute_quota = conn.get_compute_quotas(name_or_id=project.id)
-            volume_quota = conn.get_volume_quotas(name_or_id=project.id)
-            cpu_limit += compute_quota.cores
-            memory_limit += compute_quota.ram
-            storage_limit += volume_quota.gigabytes
-        # Get all instances usage
-        all_instances = conn.compute.servers(all_projects=True)
+        # Instance usage values
         cpu_usage = 0
         memory_usage = 0
         storage_usage = 0
-        for instance in all_instances:
-            cpu_usage += instance.flavor.vcpus
-            memory_usage += instance.flavor.ram
-            storage_usage += instance.flavor.disk
+        # User count initial value
+        user_count = 0
+        # Case #1 : Admin Get all projects quota
+        if role == 'ADMIN' or role == 'PROFESSOR':
+            # Get all quotas
+            conn = openstackController.create_admin_connection()
+            all_projects = conn.list_projects()
+            for project in all_projects:
+                compute_quota = conn.get_compute_quotas(name_or_id=project.id)
+                volume_quota = conn.get_volume_quotas(name_or_id=project.id)
+                cpu_limit += compute_quota.cores
+                memory_limit += compute_quota.ram
+                storage_limit += volume_quota.gigabytes
+            # Get all instances usage
+            all_instances = conn.compute.servers(all_projects=True)
+            for instance in all_instances:
+                cpu_usage += instance.flavor.vcpus
+                memory_usage += instance.flavor.ram
+                storage_usage += instance.flavor.disk
+            # Get User count
+            user_count = len(conn.list_users())
+        #2 Case #2 : User Get selected project quota
+        else:
+            # Get quota of a selected project
+            project_id = params['project_id']
+            conn = openstackController.create_connection_with_project_id(email, project_id)
 
-        # Get User count
-        user_count = len(conn.list_users())
+            compute_quota = conn.get_compute_quotas(name_or_id=project_id)
+            volume_quota = conn.get_volume_quotas(name_or_id=project_id)
+            cpu_limit = compute_quota.cores
+            memory_limit = compute_quota.ram
+            storage_limit = volume_quota.gigabytes
+
+            # Get all instances usage
+            instances = conn.list_servers()
+            for instance in instances:
+                cpu_usage += instance.flavor.vcpus
+                memory_usage += instance.flavor.ram
+                storage_usage += instance.flavor.disk
+
         return jsonify({
             "memory_usage": memory_usage / 1024,
             "memory_limit": memory_limit / 1024,
@@ -95,6 +119,8 @@ class QuotaController:
             conn.set_compute_quotas(name_or_id=quota_request.project_id, cores=quota_request.cpu,
                                     ram=quota_request.memory * 1024)
             conn.set_volume_quotas(name_or_id=quota_request.project_id, gigabytes=quota_request.storage)
+
+            # project table 내 quota 수정 필요
 
             db.session.commit()
 

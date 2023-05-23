@@ -2,12 +2,15 @@ from schooloud.blueprints import quota
 from schooloud.controller.QuotaController import QuotaController
 from flask import request, Response, abort
 
+from schooloud.libs.decorator import session_authenticate
+
 quotaController = QuotaController()
 
 
 @quota.route('/usage')
+@session_authenticate
 def get_usage(**kwargs):
-    return quotaController.current_usage()
+    return quotaController.current_usage(request.get_json(), kwargs['email'], kwargs['role'])
 
 
 @quota.route('/request', methods=['POST'])
