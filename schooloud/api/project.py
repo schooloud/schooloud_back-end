@@ -31,7 +31,7 @@ def add_member_to_project(**kwargs):
 @session_authenticate
 def project_list(**kwargs):
     try:
-        return projectController.project_list(kwargs['email'])
+        return projectController.project_list(kwargs['email'], kwargs['role'])
     except:
         return abort(404)
 
