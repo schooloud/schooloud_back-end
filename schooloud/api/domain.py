@@ -14,6 +14,14 @@ def assign_domain(**kwargs):
     return response
 
 
+@domain.route('/delete', methods=['POST'])
+@session_authenticate
+def delete_domain(**kwargs):
+    params = request.get_json()
+    response = domainController.delete_domain(params['instance_id'], params['project_id'])
+    return response
+
+
 @domain.route('/list')
 @session_authenticate
 def get_domain_list(**kwargs):

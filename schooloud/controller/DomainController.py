@@ -131,6 +131,7 @@ class DomainController:
 
         # update domain from instance
         instance.domain = None
+        instance.domain_id = None
         db.session.commit()
 
         return ''
