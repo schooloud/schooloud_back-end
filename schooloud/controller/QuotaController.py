@@ -109,7 +109,7 @@ class QuotaController:
             # Set quota changes
             conn = openstackController.create_admin_connection()
             conn.set_compute_quotas(name_or_id=project_id, cores=cpu,
-                                    ram=memory * 1024)
+                                    ram=int(memory * 1024))
             conn.set_volume_quotas(name_or_id=project_id, gigabytes=storage)
 
             # Update project information

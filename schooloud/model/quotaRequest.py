@@ -11,7 +11,7 @@ class QuotaRequest(db.Model):
     author = db.Column(db.String(50), db.ForeignKey('user.email', ondelete='CASCADE'))
 
     purpose = db.Column(db.Text(200), nullable=False)
-    memory = db.Column(db.Integer, nullable=False)
+    memory = db.Column(db.Double, nullable=False)
     cpu = db.Column(db.Integer, nullable=False)
     storage = db.Column(db.Integer, nullable=False)
     create_at = db.Column(db.DateTime(), nullable=False)

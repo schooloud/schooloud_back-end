@@ -7,7 +7,7 @@ class Project(db.Model):
     is_deleted = db.Column(db.Boolean, nullable=False)
     project_name = db.Column(db.String(30), nullable=False)
     cpu = db.Column(db.Integer, nullable=False)
-    memory = db.Column(db.Integer, nullable=False)
+    memory = db.Column(db.Double, nullable=False)
     storage = db.Column(db.Integer, nullable=False)
     create_at = db.Column(db.DateTime(), nullable=False)
     end_at = db.Column(db.DateTime(), nullable=False)
