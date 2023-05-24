@@ -172,7 +172,7 @@ class ProjectController:
                 .join(Project, StudentInProject.project_id == Project.project_id)
                 .add_columns(Project.project_name, Project.create_at, Project.cpu, Project.memory, Project.storage,
                              Project.end_at)
-                .one()
+                .all()[0]
             )
             conn = openstack_controller.create_admin_connection()
             # instances = conn.list_servers(filters={"tenant_id": project_id})
