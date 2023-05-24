@@ -13,7 +13,7 @@ DIR_HOME=$(pwd)
 export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
 
 #4. install from requirements.txt (~/schooloud_back)
-cd /home/ubuntu/schoooloud_back
+cd /home/ubuntu/schooloud_back
  # install pip and zipp
 sudo su
 
