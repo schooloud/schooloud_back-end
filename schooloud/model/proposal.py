@@ -10,7 +10,7 @@ class Proposal(db.Model):
     create_at = db.Column(db.DateTime())
     instance_num = db.Column(db.Integer, nullable=False)
     cpu = db.Column(db.Integer, nullable=False)
-    memory = db.Column(db.Integer, nullable=False)
+    memory = db.Column(db.Double, nullable=False)
     storage = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), nullable=False)
     end_at = db.Column(db.DateTime())
