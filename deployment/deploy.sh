@@ -61,6 +61,13 @@ flask --app manage db init
 flask --app manage db migrate
 flask --app manage db upgrade
 
-#10. go to home dir and restart uwsgi(~)
+#10. db access authorization
+sudo chown www.data:www.data /home/ubuntu/schooloud_back/instance
+sudo chown www.data:www.data /home/ubuntu/schooloud_back/instance/schooloud.db
+
+sudo chmod 666 /home/ubuntu/schooloud_back/instance
+sudo chmod 666 /home/ubuntu/schooloud_back/instance/schooloud.db
+
+#11. go to home dir and restart uwsgi(~)
 cd /home/ubuntu
 sudo systemctl restart uwsgi
