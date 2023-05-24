@@ -3,7 +3,7 @@ sudo apt update
 sudo apt-get update
 
 #2. github clone (~)
-git clone https://github.com/schooloud/schooloud_back-end.git /home/ubuntu/schooloud_back
+git clone -b main https://github.com/schooloud/schooloud_back-end.git /home/ubuntu/schooloud_back
 
 #3. set environment variables (~/schooloud_back)
 cd /home/ubuntu/schooloud_back
@@ -15,8 +15,6 @@ export PYTHONPATH="${PYTHONPATH}:$DIR_HOME"
 #4. install from requirements.txt (~/schooloud_back)
 cd /home/ubuntu/schooloud_back
  # install pip and zipp
-sudo su
-
 sudo apt install python3-flask
 sudo apt install python3-pip
 sudo apt-get install python3-zipp
@@ -62,11 +60,11 @@ flask --app manage db migrate
 flask --app manage db upgrade
 
 #10. db access authorization
-sudo chown www.data:www.data /home/ubuntu/schooloud_back/instance
-sudo chown www.data:www.data /home/ubuntu/schooloud_back/instance/schooloud.db
+sudo chown www-data:www-data /home/ubuntu/schooloud_back/instance
+sudo chown www-data:www-data /home/ubuntu/schooloud_back/instance/schooloud.db
 
-sudo chmod 666 /home/ubuntu/schooloud_back/instance
-sudo chmod 666 /home/ubuntu/schooloud_back/instance/schooloud.db
+sudo chmod 777 /home/ubuntu/schooloud_back/instance
+sudo chmod 777 /home/ubuntu/schooloud_back/instance/schooloud.db
 
 #11. go to home dir and restart uwsgi(~)
 cd /home/ubuntu
