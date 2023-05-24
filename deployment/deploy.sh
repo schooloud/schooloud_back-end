@@ -36,8 +36,6 @@ sudo apt-get install uwsgi
 sudo apt-get install uwsgi-core
 sudo apt-get install uwsgi-plugin-python3
 
-sudo su ubuntu
-
 #6. make socket and logs directory (~)
 cd /home/ubuntu
 mkdir socket
@@ -52,6 +50,14 @@ sudo systemctl restart uwsgi
 #8. set nginx (~)
 sudo cp /home/ubuntu/schooloud_back/deployment/schooloud_app_nginx /etc/nginx/sites-enabled/schooloud
 sudo systemctl restart nginx
+
+#12. set environment variable
+sudo echo PROXY_SERVER=\"133.186.134.137\" | sudo tee -a /etc/environment
+sudo echo FLASK_APP=\"schooloud\" | sudo tee -a /etc/environment
+sudo echo PYTHONPATH=\"/home/ubuntu/schooloud_back/schooloud\" | sudo tee -a /etc/environment
+sudo echo SCHOOLOUD_ENV=\"real\" | sudo tee -a /etc/environment
+
+sudo sh /etc/profile
 
 #9. flask setting (~/schooloud_back/schooloud)
 cd /home/ubuntu/schooloud_back/schooloud
