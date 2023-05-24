@@ -228,7 +228,7 @@ class ProjectController:
                 }
             )
 
-        return jsonify({
+        return {
             "name": project.project_name,
             "create_at": project.create_at,
             "instance_num": instance_num,
@@ -240,4 +240,4 @@ class ProjectController:
             "cpu_limit": cpu_limit,
             "storage_usage": storage_usage,
             "storage_limit": storage_limit
-        })
+        }

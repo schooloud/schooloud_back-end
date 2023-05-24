@@ -3,10 +3,11 @@ from flask import jsonify, request, Response
 from schooloud.model.quotaRequest import QuotaRequest
 from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
+from schooloud.controller.ProjectController import ProjectController
 from schooloud.libs.database import db
 
 openstackController = OpenStackController()
-
+projectController = ProjectController()
 
 class QuotaController:
     def __init__(self):
@@ -141,11 +142,19 @@ class QuotaController:
             quota_request_list = QuotaRequest.query.filter(QuotaRequest.author == email).all()
 
         for quota_request in quota_request_list:
-            return_list.append(quota_request.as_dict())
-        return jsonify({
-            "quota_requests": return_list
-        })
+            project = Project.query.filter(Project.project_id == quota_request.project_id).one()
 
-    def get_quota_request(self, quota_request_id):
+            quota_request_dict = quota_request.as_dict()
+            quota_request_dict['project_name'] = project.project_name
+            return_list.append(quota_request_dict)
+        return {
+            "quota_requests": return_list
+        }
+
+    def get_quota_request(self, quota_request_id, email, role):
         quota_request = QuotaRequest.query.filter(QuotaRequest.quota_request_id == quota_request_id).one()
-        return jsonify(quota_request.as_dict())
+        project_id = quota_request.project_id
+
+        quota_request_dict = quota_request.as_dict()
+        quota_request_dict['project_detail'] = projectController.project_detail(project_id, email, role)
+        return jsonify(quota_request_dict)

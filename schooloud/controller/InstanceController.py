@@ -47,14 +47,21 @@ class InstanceController:
             return {"message": "exceed disk usage"}
 
         # create instance
-        instance = conn.compute.create_server(name=instance_name,
-                                              image_id=image.id,
-                                              flavor_id=flavor.id,
-                                              networks=[{"uuid": network.id}],
-                                              key_name=keypair.name
-                                              )
+        try:
+            instance = conn.compute.create_server(name=instance_name,
+                                                  image_id=image.id,
+                                                  flavor_id=flavor.id,
+                                                  networks=[{"uuid": network.id}],
+                                                  key_name=keypair.name
+                                                  )
 
-        conn.compute.wait_for_server(instance)
+            conn.compute.wait_for_server(instance)
+        except:
+            # if instance's status is ERROR, delete instance and stop
+            conn.compute.delete_server(instance)
+            return {
+                "message": "ERROR: cannot create instance successfully"
+            }
 
         # assign floating ip to instance
         floating_ip = conn.create_floating_ip()
