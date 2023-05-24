@@ -34,4 +34,4 @@ def get_quota_request_list(**kwargs):
 @quota.route('/detail/<quota_request_id>')
 @session_authenticate
 def get_quota_request_detail(quota_request_id, **kwargs):
-    return quotaController.get_quota_request(quota_request_id)
+    return quotaController.get_quota_request(quota_request_id, kwargs['email'], kwargs['role'])
