@@ -50,11 +50,8 @@ def delete_proposal(**kwargs):
 @session_authenticate
 def get_proposal_list(**kwargs):
     response = ''
-    try:
-        proposal_list = proposalController.get_proposal_list(kwargs['email'])
-        response = {"proposals": proposal_list}
-    except Exception:
-        pass
+    proposal_list = proposalController.get_proposal_list(kwargs['email'])
+    response = {"proposals": proposal_list}
 
     return response
 
@@ -65,8 +62,6 @@ def approve_proposal(**kwargs):
     params = request.get_json()
     response = ''
     response_code = 200
-    try:
-        response = proposalController.update_proposal_state(params)
-    except Exception:
-        pass
+    response = proposalController.update_proposal_state(params)
+
     return response
