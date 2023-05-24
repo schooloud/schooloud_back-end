@@ -44,21 +44,26 @@ class ProposalController:
 
         return ''
 
-    def get_proposal_list(self, user_email):
+    def get_proposal_list(self, user_email, role):
         proposal_list = []
 
-        user = User.query.filter(User.email == user_email).one()
-        if user.role == 'ADMIN':
+        if role == 'ADMIN':
             proposals = Proposal.query.all()
-        elif user.role == 'STUDENT':
+        elif role == 'STUDENT':
             proposals = Proposal.query.filter(Proposal.author_email == user_email).all()
-        elif user.role == 'PROFESSOR':  # for professor
+        elif role == 'PROFESSOR':  # for professor
             proposals = Proposal.query.all()
         for proposal in proposals:
             proposal_list.append(proposal.as_dict())
         return proposal_list
 
-    def update_proposal_state(self, request_data):
+    def update_proposal_state(self, request_data, role):
+        # check user's role
+        if role == 'STUDENT':
+            return {
+                "message": "Error: student can't approve proposal"
+            }
+
         proposal_id = request_data['proposal_id']
         is_approved = request_data['is_approved']
 

@@ -26,7 +26,7 @@ class QuotaController:
         }
         return quota_request_dict
 
-    def current_usage(self, params, email, role):
+    def current_usage(self, role):
         # Quota values
         cpu_limit = 0
         memory_limit = 0

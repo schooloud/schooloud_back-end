@@ -51,7 +51,7 @@ def delete_proposal(**kwargs):
 def get_proposal_list(**kwargs):
     response = ''
     try:
-        proposal_list = proposalController.get_proposal_list(kwargs['email'])
+        proposal_list = proposalController.get_proposal_list(kwargs['email'], kwargs['role'])
         response = {"proposals": proposal_list}
     except Exception:
         pass
@@ -66,7 +66,7 @@ def approve_proposal(**kwargs):
     response = ''
     response_code = 200
     try:
-        response = proposalController.update_proposal_state(params)
+        response = proposalController.update_proposal_state(params, kwargs['role'])
     except Exception:
         pass
     return response
