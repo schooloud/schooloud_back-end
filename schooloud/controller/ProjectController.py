@@ -143,9 +143,13 @@ class ProjectController:
             )
 
             for project in user_projects:
-                member_count = (
-                    len(StudentInProject.query.filter(StudentInProject.project_id == project.project_id).all())
-                )
+                try:
+                    member_count = (
+                        len(StudentInProject.query.filter(StudentInProject.project_id == project.project_id).all())
+                    )
+                except NoResultFound:
+                    member_count = 0
+
                 projects.append(
                     {
                         "project_id": project[0].project_id,
@@ -157,9 +161,13 @@ class ProjectController:
         elif role == 'ADMIN' or role == 'PROFESSOR':
             user_projects = Project.query.order_by(asc(Project.create_at)).all()
             for project in user_projects:
-                member_count = (
-                    len(StudentInProject.query.filter(StudentInProject.project_id == project.project_id).all())
-                )
+                try:
+                    member_count = (
+                        len(StudentInProject.query.filter(StudentInProject.project_id == project.project_id).all())
+                    )
+                except NoResultFound:
+                    member_count = 0
+
                 projects.append(
                     {
                         "project_id": project.project_id,
