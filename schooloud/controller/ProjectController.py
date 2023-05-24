@@ -86,10 +86,11 @@ class ProjectController:
         subnet = conn.create_subnet(
             network_name_or_id=private_net.id,
             subnet_name='private-subnet',
-            use_default_subnetpool=True,
+            cidr="10.0.100.0/24",
+            allocation_pools=[{"start": "10.0.100.2", "end": "10.0.100.254"}],
+            gateway_ip="10.0.100.1",
             enable_dhcp=True,
-            dns_nameservers=['8.8.8.8', ],
-            prefixlen=32-math.ceil(math.log(proposal.instance_num, 2))
+            dns_nameservers=['8.8.8.8', ]
         )
 
         # Create router to connect between public and private
