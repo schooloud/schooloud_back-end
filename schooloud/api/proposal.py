@@ -50,6 +50,7 @@ def delete_proposal(**kwargs):
 @session_authenticate
 def get_proposal_list(**kwargs):
     response = ''
+
     proposal_list = proposalController.get_proposal_list(kwargs['email'])
     response = {"proposals": proposal_list}
 
@@ -63,5 +64,4 @@ def approve_proposal(**kwargs):
     response = ''
     response_code = 200
     response = proposalController.update_proposal_state(params)
-
     return response

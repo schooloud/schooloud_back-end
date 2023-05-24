@@ -74,10 +74,9 @@ class DomainController:
 
         return ''
 
-    def get_domain_list(self, user_email):
+    def get_domain_list(self, role):
         # check role
-        user = User.query.filter(User.email == user_email).one()
-        if user.role != 'ADMIN':
+        if role != 'ADMIN':
             return {"message": "ERROR: user's role must be ADMIN"}
 
         # openstack connection
