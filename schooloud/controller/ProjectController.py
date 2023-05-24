@@ -141,21 +141,30 @@ class ProjectController:
                 .filter(StudentInProject.student_email == email).order_by(asc(Project.create_at))
                 .all()
             )
+
             for project in user_projects:
+                member_count = (
+                    len(StudentInProject.query.filter(StudentInProject.project_id == project.project_id).all())
+                )
                 projects.append(
                     {
                         "project_id": project[0].project_id,
-                        "project_name": project.project_name
+                        "project_name": project.project_name,
+                        "member_count": member_count
                     }
                 )
         # Case #2 : Admin or Professor project list
         elif role == 'ADMIN' or role == 'PROFESSOR':
             user_projects = Project.query.order_by(asc(Project.create_at)).all()
             for project in user_projects:
+                member_count = (
+                    len(StudentInProject.query.filter(StudentInProject.project_id == project.project_id).all())
+                )
                 projects.append(
                     {
                         "project_id": project.project_id,
-                        "project_name": project.project_name
+                        "project_name": project.project_name,
+                        "member_count": member_count
                     }
                 )
         else:
