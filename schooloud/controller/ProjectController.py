@@ -47,7 +47,7 @@ class ProjectController:
         conn.identity.assign_project_role_to_user(project=created_project.id, user=user_id, role=role_id)
 
         # Set quotas specified on proposal
-        conn.set_compute_quotas(name_or_id=created_project.id, instances=proposal.instance_num, ram=int(proposal.memory*1024), cores=proposal.cpu)
+        conn.set_compute_quotas(name_or_id=created_project.id, instances=proposal.cpu, ram=int(proposal.memory*1024), cores=proposal.cpu)
         conn.set_volume_quotas(name_or_id=created_project.id, gigabytes=proposal.storage)
 
         # Create project on backend server
