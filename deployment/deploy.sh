@@ -51,7 +51,7 @@ sudo systemctl restart uwsgi
 sudo cp /home/ubuntu/schooloud_back/deployment/schooloud_app_nginx /etc/nginx/sites-enabled/schooloud
 sudo systemctl restart nginx
 
-#12. set environment variable
+#9. set environment variable
 sudo echo PROXY_SERVER=\"133.186.134.137\" | sudo tee -a /etc/environment
 sudo echo FLASK_APP=\"schooloud\" | sudo tee -a /etc/environment
 sudo echo PYTHONPATH=\"/home/ubuntu/schooloud_back/schooloud\" | sudo tee -a /etc/environment
@@ -59,19 +59,18 @@ sudo echo SCHOOLOUD_ENV=\"real\" | sudo tee -a /etc/environment
 
 sudo sh /etc/profile
 
-#9. flask setting (~/schooloud_back/schooloud)
+#10. flask setting (~/schooloud_back/schooloud)
 cd /home/ubuntu/schooloud_back/schooloud
 flask --app manage db init
 flask --app manage db migrate
 flask --app manage db upgrade
 
-#10. db access authorization
+#11. db access authorization
 sudo chown www-data:www-data /home/ubuntu/schooloud_back/instance
 sudo chown www-data:www-data /home/ubuntu/schooloud_back/instance/schooloud.db
-
 sudo chmod 777 /home/ubuntu/schooloud_back/instance
 sudo chmod 777 /home/ubuntu/schooloud_back/instance/schooloud.db
 
-#11. go to home dir and restart uwsgi(~)
+#12. go to home dir and restart uwsgi(~)
 cd /home/ubuntu
 sudo systemctl restart uwsgi
