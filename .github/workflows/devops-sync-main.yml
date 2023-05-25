@@ -21,8 +21,8 @@ jobs:
         port: ${{ secrets.MAIN_PORT }}
         script: |
           cd /home/ubuntu/schooloud_back
-          git checkout develop
-          git pull origin develop
+          git checkout main
+          git pull origin main
           cd /home/ubuntu/schooloud_back/schooloud
           flask --app manage db migrate
           flask --app manage db upgrade
