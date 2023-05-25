@@ -56,6 +56,8 @@ sudo echo PROXY_SERVER=\"133.186.134.137\" | sudo tee -a /etc/environment
 sudo echo FLASK_APP=\"schooloud\" | sudo tee -a /etc/environment
 sudo echo PYTHONPATH=\"/home/ubuntu/schooloud_back/schooloud\" | sudo tee -a /etc/environment
 sudo echo SCHOOLOUD_ENV=\"real\" | sudo tee -a /etc/environment
+sudo echo OPENSTACK_AUTH_URL=\"http://121.189.58.27/identity\" | sudo tee -a /etc/environment
+sudo echo OPENSTACK_ADMIN_PROJECT=\"0f180468cc6d416ab9426047510b4e3f\" | sudo tee -a /etc/environment
 
 sudo sh /etc/profile
 

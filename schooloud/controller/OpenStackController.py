@@ -1,3 +1,5 @@
+import os
+
 import openstack
 from schooloud.model.user import User
 from schooloud.model.project import Project
@@ -11,10 +13,10 @@ class OpenStackController:
     def create_admin_connection(self):
         admin = User.query.filter(User.email == 'admin').one()
         return openstack.connect(
-            auth_url="http://121.189.58.27/identity",
+            auth_url=os.environ['OPENSTACK_AUTH_URL'],
             username=admin.email,
             password=admin.password,
-            project_id="0f180468cc6d416ab9426047510b4e3f",
+            project_id=os.environ['OPENSTACK_ADMIN_PROJECT'],
             project_name="admin",
             user_domain_name="Default",
             project_domain_name="default",
@@ -30,7 +32,7 @@ class OpenStackController:
             StudentInProject.student_email == email).all()[0].project_id).one()
         # return connection
         return openstack.connect(
-            auth_url="http://121.189.58.27/identity",
+            auth_url=os.environ['OPENSTACK_AUTH_URL'],
             username=user.email,
             password=user.password,
             project_id=project.project_id,
@@ -46,7 +48,7 @@ class OpenStackController:
         user = User.query.filter(User.email == email).one()
         project = Project.query.filter(Project.project_id == project_id).one()
         return openstack.connect(
-            auth_url="http://121.189.58.27/identity",
+            auth_url=os.environ['OPENSTACK_AUTH_URL'],
             username=user.email,
             password=user.password,
             project_id=project.project_id,
@@ -62,7 +64,7 @@ class OpenStackController:
         user = User.query.filter(User.email == email).one()
         project = Project.query.filter(Project.project_id == project_id).one()
         return openstack.connect(
-            auth_url="http://121.189.58.27/identity",
+            auth_url=os.environ['OPENSTACK_AUTH_URL'],
             username=user.email,
             password=user.password,
             project_id=project.project_id,
