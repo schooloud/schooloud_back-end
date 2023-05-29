@@ -16,13 +16,15 @@ class FlavorController:
                 return str(ram) + 'MB'
 
         conn = openstack_controller.create_admin_connection()
+        allow_flavors = ['m1.micro', 'm1.tiny', 'm1.small', 'cirros256']
         flavors = []
         for flavor in conn.compute.flavors():
-            f = {'id': flavor['id'],
-                 'name': flavor['name'],
-                 'ram': ram_format(flavor['ram']),
-                 'disk': str(flavor['disk']) + 'GB',
-                 'cpu': str(flavor['vcpus'])
-                 }
-            flavors.append(f)
-        return {"flavors": flavors[0:8]}
+            if flavor['name'] in allow_flavors:
+                f = {'id': flavor['id'],
+                     'name': flavor['name'],
+                     'ram': ram_format(flavor['ram']),
+                     'disk': str(flavor['disk']) + 'GB',
+                     'cpu': str(flavor['vcpus'])
+                     }
+                flavors.append(f)
+        return {"flavors": flavors}
