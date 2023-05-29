@@ -58,7 +58,8 @@ class InstanceController:
             conn.compute.wait_for_server(instance)
         except:
             # if instance's status is ERROR, delete instance and stop
-            conn.compute.delete_server(instance)
+            if instance is not None:
+                conn.compute.delete_server(instance)
             return {
                 "message": "ERROR: cannot create instance successfully"
             }
