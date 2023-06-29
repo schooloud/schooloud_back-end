@@ -91,7 +91,10 @@ class InstanceController:
         }
         response = requests.post(f'http://{proxy_server}/api/v1/ssh/create', json=data)
 
-        return {"instance_id": instance.instance_id}
+        return {
+            "message": "instance successfully created",
+            "instance_id": instance.instance_id
+        }
 
     def unpause_instance(self, request_data, user_email):
         project_id = request_data['project_id']
