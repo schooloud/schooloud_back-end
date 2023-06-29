@@ -35,7 +35,7 @@ class ProposalController:
         ##################################################
         request_data = {
             'proposal_id': proposal.proposal_id,
-            'is_approved' = True
+            'is_approved': True
         }
         role = 'PROFESSOR'
         update_proposal_state(request_data, role)
