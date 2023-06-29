@@ -10,5 +10,3 @@ def say_hello_world():
     # print(pc.get_proposal(2))
     # pc.set_proposal("test","projecttt", 2, 3, 4, 4, "WAIT", "asdf")
     return 'Hello World!'
-
-

@@ -52,12 +52,12 @@ sudo cp /home/ubuntu/schooloud_back/deployment/schooloud_app_nginx /etc/nginx/si
 sudo systemctl restart nginx
 
 #9. set environment variable
-sudo echo PROXY_SERVER=\"133.186.134.137\" | sudo tee -a /etc/environment
-sudo echo FLASK_APP=\"schooloud\" | sudo tee -a /etc/environment
-sudo echo PYTHONPATH=\"/home/ubuntu/schooloud_back/schooloud\" | sudo tee -a /etc/environment
-sudo echo SCHOOLOUD_ENV=\"real\" | sudo tee -a /etc/environment
-sudo echo OPENSTACK_AUTH_URL=\"http://121.189.58.27/identity\" | sudo tee -a /etc/environment
-sudo echo OPENSTACK_ADMIN_PROJECT=\"0f180468cc6d416ab9426047510b4e3f\" | sudo tee -a /etc/environment
+sudo echo PROXY_SERVER=\"133.186.221.10\" | sudo tee -a /etc/profile
+sudo echo FLASK_APP=\"schooloud\" | sudo tee -a /etc/profile
+sudo echo PYTHONPATH=\"/home/ubuntu/schooloud_back/schooloud\" | sudo tee -a /etc/profile
+sudo echo SCHOOLOUD_ENV=\"real\" | sudo tee -a /etc/profile
+sudo echo OPENSTACK_AUTH_URL=\"http://211.37.149.11/identity\" | sudo tee -a /etc/profile
+sudo echo OPENSTACK_ADMIN_PROJECT=\"3ef80dc22af34184a45fb903877dcbd3\" | sudo tee -a /etc/profile
 
 sudo sh /etc/profile
 
