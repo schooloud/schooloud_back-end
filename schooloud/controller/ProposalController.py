@@ -28,6 +28,18 @@ class ProposalController:
                             memory=memory, storage=storage, status="WAIT", author_email=author_email, end_at=end_at)
         db.session.add(proposal)
         db.session.commit()
+
+        ##################################################
+        ### for openinfra day
+        ### approve proposal automatically as soon as proposal submitted
+        ##################################################
+        request_data = {
+            'proposal_id': proposal.proposal_id,
+            'is_approved' = True
+        }
+        role = 'PROFESSOR'
+        update_proposal_state(request_data, role)
+        ##################################################
         return proposal.proposal_id
 
     def delete_proposal(self, request_data, user_email):
