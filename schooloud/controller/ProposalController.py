@@ -37,8 +37,16 @@ class ProposalController:
             'proposal_id': proposal.proposal_id,
             'is_approved': True
         }
-        role = 'PROFESSOR'
-        update_proposal_state(request_data, role)
+        proposal.update({"status": "APPROVED"})
+        db.session.commit()
+        # 프로젝트 생성 함수 호출
+        projectController = ProjectController()
+        project_id = projectController.create_project(request_data, author_email)
+        return {
+            "message": "proposal APPROVED",
+            "proposal_id": proposal_id,
+            "project_id": project_id
+        }
         ##################################################
         return proposal.proposal_id
 
