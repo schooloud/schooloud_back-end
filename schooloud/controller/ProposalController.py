@@ -38,7 +38,8 @@ class ProposalController:
             'is_approved': True
         }
         role = 'PROFESSOR'
-        update_proposal_state(self, request_data, role)
+        proposalController = ProposalController()
+        proposalController.update_proposal_state(request_data, role)
         ##################################################
         return proposal.proposal_id
 
