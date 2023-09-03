@@ -15,7 +15,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    phase = os.getenv('SCHOOLOUD_ENV', 'real').lower()
+    phase = os.getenv('SCHOOLOUD_ENV', 'dev/dev').lower()
     app.config.from_pyfile('../config/%s/config.cfg' % phase)
 
     # CORS
