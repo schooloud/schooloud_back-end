@@ -120,6 +120,7 @@ class ProjectController:
 
             # delete project from DB
             Project.query.filter(Project.project_id == project_id).delete()
+            StudentInProject.query.filter(StudentInProject.project_id == project_id).delete()
             db.session.commit()
 
             return {
