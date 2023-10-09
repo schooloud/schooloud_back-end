@@ -33,3 +33,9 @@ def project_list(**kwargs):
 @session_authenticate
 def project_detail(project_id, **kwargs):
     return projectController.project_detail(project_id, kwargs['email'], kwargs['role'])
+
+
+@project.route('/delete', methods=['POST'])
+@session_authenticate
+def delete_project(**kwargs):
+    return projectController.delete_project(request.get_json(), kwargs['role'])
