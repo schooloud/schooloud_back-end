@@ -71,16 +71,14 @@ class ProjectController:
 
         conn = openstack_controller.create_connection_with_project_id(email=email, project_id=project.project_id)
 
-        # Create private network (with admin auth)
-        private_net = conn.create_network(
-            name="private"
-        )
-
         # Update Security group Rule
         security_group = conn.get_security_group(name_or_id="default").id
         conn.create_security_group_rule(
             secgroup_name_or_id=security_group
         )
+
+        # Create private network (with admin auth)
+        private_net = conn.create_network(name="private")
 
         # Create subnet for private network
         subnet = conn.create_subnet(
@@ -109,6 +107,28 @@ class ProjectController:
         )
 
         return project.project_id
+
+    def delete_project(self, params, role):
+        if role == "ADMIN":
+            # get project
+            project_id = params['project_id']
+
+            conn = openstack_controller.create_admin_connection()
+
+            # delete project
+            conn.delete_project(project_id)
+
+            # delete project from DB
+            Project.query.filter(Project.project_id == project_id).delete()
+            db.session.commit()
+
+            return {
+                "message": "successfully deleted"
+            }
+        else:
+            return {
+                "message": "permission denied"
+            }
 
 
     def add_member_to_project(self, params):
