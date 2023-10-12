@@ -115,6 +115,12 @@ class ProjectController:
         
             conn = openstack_controller.create_admin_connection()
 
+            # delete router
+            router = conn.find_router(name='public-private-router', query={"project_id":project_id})
+            conn.delete_router(router.id)
+            # delete subnet
+            network = conn.find_network(name='private', query={"project_id":project_id})
+            conn.delete_network(network.id)
             # delete project
             conn.delete_project(project_id)
 
