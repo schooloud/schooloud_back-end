@@ -112,7 +112,7 @@ class ProjectController:
         if role == "ADMIN":
             # get project
             project_id = params['project_id']
-
+        
             conn = openstack_controller.create_admin_connection()
 
             # delete project
@@ -156,10 +156,11 @@ class ProjectController:
         projects = []
         # Case #1 : Student project list
         if role == 'STUDENT':
+            now = datetime.datetime.now()
             user_projects = (
                 StudentInProject.query.join(Project, StudentInProject.project_id == Project.project_id)
-                .add_columns(Project.project_name, Project.create_at)
-                .filter(StudentInProject.student_email == email).order_by(asc(Project.create_at))
+                .add_columns(Project.project_name, Project.create_at, Project.end_at)
+                .filter(StudentInProject.student_email == email, Project.end_at < now).order_by(asc(Project.create_at))
                 .all()
             )
 
