@@ -3,4 +3,3 @@ flask-migrate
 Flask-Script
 python-openstackclient
 flask-cors
-sqlite3
