@@ -28,6 +28,7 @@ sudo pip install -r ./requirements.txt
 sudo pip install openstackclient
 sudo pip install python-openstackclient
 sudo pip install flask-cors
+sudo pip install flask-migrate
 
 #5. install uwsgi and nginx (~/schooloud_back)
 sudo apt-get install python3.8-dev
