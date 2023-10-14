@@ -33,13 +33,13 @@ class ProposalController:
         ### for openinfra day
         ### approve proposal automatically as soon as proposal submitted
         ##################################################
-        request_data = {
-            'proposal_id': proposal.proposal_id,
-            'is_approved': True
-        }
-        role = 'PROFESSOR'
-        proposalController = ProposalController()
-        proposalController.update_proposal_state(request_data, role)
+        # request_data = {
+        #     'proposal_id': proposal.proposal_id,
+        #    'is_approved': True
+        #}
+        #role = 'PROFESSOR'
+        #proposalController = ProposalController()
+        #proposalController.update_proposal_state(request_data, role)
         ##################################################
         return proposal.proposal_id
 
