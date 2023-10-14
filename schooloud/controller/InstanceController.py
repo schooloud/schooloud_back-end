@@ -40,11 +40,11 @@ class InstanceController:
 
         project = Project.query.filter(Project.project_id == project_id).one()
         if project.cpu < current_cpu_usage + flavor['vcpus']:
-            return {"message": "exceed cpu usage"}
+            return {"message": "ERROR: exceed cpu usage, Please increase project capacity by requesting a project quota change."}
         if project.memory < current_ram_usage + flavor['ram'] / 1024:
-            return {"message": "exceed memory usage"}
+            return {"message": "ERROR: exceed memory usage, Please increase project capacity by requesting a project quota change."}
         if project.storage < current_disk_usage + flavor['disk']:
-            return {"message": "exceed disk usage"}
+            return {"message": "ERROR: exceed disk usage, Please increase project capacity by requesting a project quota change."}
 
         # create instance
         try:
@@ -61,7 +61,7 @@ class InstanceController:
             if instance is not None:
                 conn.compute.delete_server(instance)
             return {
-                "message": "ERROR: cannot create instance successfully"
+                "message": "ERROR: cannot create instance successfully, Please increase the size of the instance type."
             }
 
         # assign floating ip to instance
