@@ -115,28 +115,32 @@ class ProjectController:
             project_id = params['project_id']
         
             conn = openstack_controller.create_admin_connection()
-
-            router = conn.network.find_router(name_or_id='public-private-router', project_id=project_id)
-            subnet = conn.network.find_subnet(name_or_id='private-subnet', project_id=project_id)
-            network = conn.network.find_network(name_or_id='private', project_id=project_id)
-
-            # delete router
-            conn.network.remove_gateway_from_router(router.id)
-            conn.network.remove_interface_from_router(router.id, subnet_id=subnet.id)
-            conn.network.delete_router(router.id)
-
-            # delete network
-            conn.network.delete_subnet(subnet.id)
-            conn.network.delete_network(network.id)
-
-            # delete project
-            conn.delete_project(project_id)
-
-            # delete project from DB
-            Project.query.filter(Project.project_id == project_id).delete()
-            QuotaRequest.query.filter(QuotaRequest.project_id == project_id).delete()
-            StudentInProject.query.filter(StudentInProject.project_id == project_id).delete()
-            db.session.commit()
+            try: 
+                router = conn.network.find_router(name_or_id='public-private-router', project_id=project_id)
+                subnet = conn.network.find_subnet(name_or_id='private-subnet', project_id=project_id)
+                network = conn.network.find_network(name_or_id='private', project_id=project_id)
+    
+                # delete router
+                conn.network.remove_gateway_from_router(router.id)
+                conn.network.remove_interface_from_router(router.id, subnet_id=subnet.id)
+                conn.network.delete_router(router.id)
+    
+                # delete network
+                conn.network.delete_subnet(subnet.id)
+                conn.network.delete_network(network.id)
+    
+                # delete project
+                conn.delete_project(project_id)
+    
+                # delete project from DB
+                Project.query.filter(Project.project_id == project_id).delete()
+                QuotaRequest.query.filter(QuotaRequest.project_id == project_id).delete()
+                StudentInProject.query.filter(StudentInProject.project_id == project_id).delete()
+                db.session.commit()
+            except:
+                return {
+                        "message": "ERROR: cannot delete project, Please check that the instance of the project has not been deleted."
+                        }
 
             return {
                 "message": "successfully deleted"
