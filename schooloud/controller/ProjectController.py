@@ -10,6 +10,7 @@ from schooloud.model.project import Project
 from schooloud.controller.OpenStackController import OpenStackController
 from schooloud.model.proposal import Proposal
 from schooloud.model.studentInProject import StudentInProject
+from schooloud.model.quotaRequest import QuotaRequest
 from flask import jsonify, abort
 from schooloud.model.user import User
 from urllib import parse
@@ -115,17 +116,25 @@ class ProjectController:
         
             conn = openstack_controller.create_admin_connection()
 
+            router = conn.network.find_router(name_or_id='public-private-router', project_id=project_id)
+            subnet = conn.network.find_subnet(name_or_id='private-subnet', project_id=project_id)
+            network = conn.network.find_network(name_or_id='private', project_id=project_id)
+
             # delete router
-            router = conn.find_router(name='public-private-router', query={"project_id":project_id})
-            conn.delete_router(router.id)
-            # delete subnet
-            network = conn.find_network(name='private', query={"project_id":project_id})
-            conn.delete_network(network.id)
+            conn.network.remove_gateway_from_router(router.id)
+            conn.network.remove_interface_from_router(router.id, subnet_id=subnet.id)
+            conn.network.delete_router(router.id)
+
+            # delete network
+            conn.network.delete_subnet(subnet.id)
+            conn.network.delete_network(network.id)
+
             # delete project
             conn.delete_project(project_id)
 
             # delete project from DB
             Project.query.filter(Project.project_id == project_id).delete()
+            QuotaRequest.query.filter(QuotaRequest.project_id == project_id).delete()
             StudentInProject.query.filter(StudentInProject.project_id == project_id).delete()
             db.session.commit()
 
