@@ -65,7 +65,7 @@ class QuotaController:
             "cpu_limit": cpu_limit,
             "storage_usage": storage_usage,
             "storage_limit": storage_limit,
-            "user_count": user_count
+            "user_count": user_count-12
         })
 
     def create_request(self, params, email):
