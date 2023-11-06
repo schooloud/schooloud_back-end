@@ -1,4 +1,4 @@
-# Schooloud 실행 방법
+# Schooloud 설치 방법
 본 문서는 schooloud 서비스 배포 시 설치 후 실행 방법에 대해 기술합니다.<br>
 클라우드 인프라 서비스를 위한 서버3대(Backend, proxy, openstack)와 dns 연결을 위한 nhn DNS plus 서비스가 필요합니다.
 
