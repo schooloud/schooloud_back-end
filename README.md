@@ -12,13 +12,21 @@ schooloud는 제한된 공인 IP 자원으로 클라우드 서비스를 제공�
 <br>
 
 ## :pushpin:목차
+- [가이드](#✔️가이드)
 - [사용방법](#hammer사용-방법)
   - [학생](#학생)
   - [교수](#교수)
   - [관리자](#관리자)
 - [시스템 아키텍쳐](#floppy_disk시스템-아키텍쳐)
 <br><br>
+## ✔️가이드
+Schooloud 실행을 위한 모든 사항은 아래 문서를 참고해주세요.
+- **License**: <a href="LICENSE">GPL v2.0</a>
+- **Install**:
+- **Execute**:
+- **Contribute**:
 
+<br><br>
 ## :hammer:사용 방법
 schooloud 서비스 사용자는 크게 3가지 역할로 분류됩니다. 
 ### 학생
