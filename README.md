@@ -12,7 +12,7 @@ schooloud는 제한된 공인 IP 자원으로 클라우드 서비스를 제공�
 <br>
 
 ## :pushpin:목차
-- [가이드](#✔️가이드)
+- [가이드](#%EF%B8%8F가이드)
 - [사용방법](#hammer사용-방법)
   - [학생](#학생)
   - [교수](#교수)
@@ -22,9 +22,9 @@ schooloud는 제한된 공인 IP 자원으로 클라우드 서비스를 제공�
 ## ✔️가이드
 Schooloud 실행을 위한 모든 사항은 아래 문서를 참고해주세요.
 - **License**: <a href="LICENSE">GPL v2.0</a>
-- **Install**:
-- **Execute**:
-- **Contribute**:
+- **Install**: <a href="INSTALL.md"> 설치방법 </a>
+- **Execute**: [사용방법](#hammer사용-방법)
+- **Contribute**: 
 
 <br><br>
 ## :hammer:사용 방법
