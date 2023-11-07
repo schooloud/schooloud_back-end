@@ -24,7 +24,7 @@ Schooloud 실행을 위한 모든 사항은 아래 문서를 참고해주세요.
 - **License**: <a href="LICENSE">GPL v2.0</a>
 - **Install**: <a href="INSTALL.md"> 설치방법 </a>
 - **Execute**: [사용방법](#hammer사용-방법)
-- **Contribute**: 
+- **Contribute**: <a href="https://github.com/schooloud/guideline_for_contribution">기여방법</a>
 
 <br><br>
 ## :hammer:사용 방법
